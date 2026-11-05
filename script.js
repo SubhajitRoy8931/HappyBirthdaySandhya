@@ -11,7 +11,9 @@
 
   const poem = document.getElementById('poem');
   const scenes = [...document.querySelectorAll('.scene')];
+  const beginningButton = document.getElementById('beginningButton');
   const previousButton = document.getElementById('previousButton');
+  const endButton = document.getElementById('endButton');
   const playButton = document.getElementById('playButton');
   const nextButton = document.getElementById('nextButton');
   const controls = document.getElementById('transportControls');
@@ -1505,6 +1507,55 @@
     : 0;
   const thingsNarrationStartMs = AFTER_BREAKUP_TEXT_START_MS + thingsIntroTypewriter.typingDuration + lastThingsEventAt + lastThingsEventReadingMs;
   const thingsNarrationTypewriter = prepareChapterTextTypewriter(thingsNarration, 'new-memory-glyph');
+  const thingsMobileLayout = window.matchMedia('(max-width: 760px)');
+  const thingsLeftColumn = thingsStage.querySelector('.things-timeline-left');
+  const thingsRightColumn = thingsStage.querySelector('.things-timeline-right');
+  const thingsMobileTrack = thingsStage.querySelector('.things-mobile-track');
+  function updateThingsTimelineTracks() {
+    const visibleEvents = thingsEvents.filter(element => element.classList.contains('is-visible'));
+    [thingsLeftColumn, thingsRightColumn].forEach(column => {
+      if (!column) return;
+      const track = column.querySelector('.things-timeline-track');
+      if (!track) return;
+      const columnEvents = [...column.querySelectorAll('.things-event.is-visible')];
+      if (!columnEvents.length) {
+        track.style.height = '0px';
+        return;
+      }
+      const columnRect = column.getBoundingClientRect();
+      const lastRect = columnEvents[columnEvents.length - 1].getBoundingClientRect();
+      // The dotted line ends at the centre of the latest revealed marker.
+      const markerCentre = lastRect.top - columnRect.top + 16.5;
+      track.style.height = `${Math.max(0, markerCentre - 9)}px`;
+    });
+    if (thingsMobileTrack) {
+      if (!thingsMobileLayout.matches || !visibleEvents.length) {
+        thingsMobileTrack.style.height = '0px';
+      } else {
+        const grid = thingsStage.querySelector('.things-timeline-grid');
+        const gridRect = grid.getBoundingClientRect();
+        const lastRect = visibleEvents[visibleEvents.length - 1].getBoundingClientRect();
+        const markerCentre = lastRect.top - gridRect.top + 16.5;
+        thingsMobileTrack.style.height = `${Math.max(0, markerCentre - 8)}px`;
+      }
+    }
+  }
+
+  function keepLatestThingsItemVisible(element) {
+    if (!thingsMobileLayout.matches || !element || thingsStage.scrollHeight <= thingsStage.clientHeight + 2) return;
+    const stageRect = thingsStage.getBoundingClientRect();
+    const itemRect = element.getBoundingClientRect();
+    const itemBottom = itemRect.bottom - stageRect.top + thingsStage.scrollTop;
+    const visibleBottom = thingsStage.scrollTop + thingsStage.clientHeight;
+    // Do not move the page until the next timeline item actually passes
+    // the visible bottom edge. Native touch scrolling remains available.
+    if (itemBottom > visibleBottom - 22) {
+      thingsStage.scrollTo({
+        top: Math.max(0, itemBottom - thingsStage.clientHeight + 34),
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+    }
+  }
   const thingsDuration = Math.ceil(
     thingsNarrationStartMs + thingsNarrationTypewriter.typingDuration + NEW_MEMORY_FINAL_HOLD_MS
   );
@@ -1765,6 +1816,7 @@
 
   function setScene(index) {
     if (index === activeScene) return;
+    experience.classList.remove('is-instant-state');
     if (activeScene === 34 && index !== 34) stopWhatsAppVideoForNavigation();
     if (activeScene === 35 && index !== 35) stopCallsVideoForNavigation();
     if (activeScene === 40 && index !== 40) stopSecondDropVideoForNavigation();
@@ -1772,7 +1824,12 @@
     if (activeScene === 45 && index !== 45) stopBreakupVideoForNavigation();
     activeScene = index;
     if (index === 48 && whatChatFeed) whatChatFeed.scrollTop = 0;
-    if (index === 49 && thingsStage) thingsStage.scrollTop = 0;
+    if (index === 49 && thingsStage) {
+      thingsStage.scrollTop = 0;
+      thingsStage.querySelectorAll('.things-timeline-track, .things-mobile-track').forEach(track => { track.style.height = '0px'; });
+      const narrationContainer = thingsStage.querySelector('.things-narration');
+      if (narrationContainer) narrationContainer.classList.remove('is-visible');
+    }
     scenes.forEach((scene, i) => scene.classList.toggle('is-active', i === index));
     previousButton.disabled = index === 0;
     nextButton.disabled = false;
@@ -1999,10 +2056,21 @@
     if (index === 49) {
       updateNewMemoryTypewriter(thingsIntroTypewriter, localTime, AFTER_BREAKUP_TEXT_START_MS);
       thingsTimelineSchedule.forEach(item => {
-        item.element.classList.toggle('is-visible', localTime >= AFTER_BREAKUP_TEXT_START_MS + thingsIntroTypewriter.typingDuration + item.at);
+        const visible = localTime >= AFTER_BREAKUP_TEXT_START_MS + thingsIntroTypewriter.typingDuration + item.at;
+        const wasVisible = item.element.classList.contains('is-visible');
+        item.element.classList.toggle('is-visible', visible);
+        if (visible && !wasVisible) keepLatestThingsItemVisible(item.element);
       });
+      updateThingsTimelineTracks();
       thingsNarrationTypewriter.events.forEach(event => {
-        event.element.classList.toggle('is-visible', localTime >= thingsNarrationStartMs + event.at);
+        const visible = localTime >= thingsNarrationStartMs + event.at;
+        const wasVisible = event.element.classList.contains('is-visible');
+        event.element.classList.toggle('is-visible', visible);
+        if (visible && !wasVisible) {
+          const narrationContainer = thingsStage.querySelector('.things-narration');
+          if (narrationContainer) narrationContainer.classList.add('is-visible');
+          keepLatestThingsItemVisible(event.element);
+        }
       });
     }
   }
@@ -2106,19 +2174,60 @@
     acquireScreenWakeLock();
   }
 
+  function resetActiveSceneForSeek(targetIndex) {
+    // Re-enter the current scene so its scene-specific visual state, scroll
+    // position, timeline tracks and media are reset before rendering a seek.
+    if (activeScene === 34) stopWhatsAppVideoForNavigation();
+    if (activeScene === 35) stopCallsVideoForNavigation();
+    if (activeScene === 40) stopSecondDropVideoForNavigation();
+    if (activeScene === 42) stopLastGlimpsesVideoForNavigation();
+    if (activeScene === 45) stopBreakupVideoForNavigation();
+    scenes[targetIndex].classList.remove('is-active');
+    activeScene = -1;
+    elapsed = offsets[targetIndex];
+    render();
+  }
+
   function jumpTo(index) {
     const safeIndex = Math.max(0, Math.min(sceneDefs.length - 1, index));
-    elapsed = offsets[safeIndex];
     ended = false;
-    // Navigation out of the completed experience makes the wake lock eligible
-    // again; it is reacquired only when the visitor explicitly resumes.
     screenWakeLockWanted = true;
-    // Manual scene navigation is a seek, not a play command. Land at the
-    // beginning of the selected scene and remain paused until Play/Resume.
     paused = true;
     lastFrameTime = 0;
     experience.classList.add('is-paused');
+    experience.classList.remove('is-instant-state');
+    resetActiveSceneForSeek(safeIndex);
+    showControls();
+    syncPlayButton();
+  }
+
+  function jumpToCurrentSectionBeginning() {
+    if (activeScene < 0) return;
+    ended = false;
+    screenWakeLockWanted = true;
+    paused = true;
+    lastFrameTime = 0;
+    experience.classList.add('is-paused');
+    experience.classList.remove('is-instant-state');
+    resetActiveSceneForSeek(activeScene);
+    showControls();
+    syncPlayButton();
+  }
+
+  function jumpToCurrentSectionEnd() {
+    if (activeScene < 0) return;
+    const targetScene = activeScene;
+    ended = false;
+    screenWakeLockWanted = true;
+    paused = true;
+    lastFrameTime = 0;
+    experience.classList.add('is-paused');
+    resetActiveSceneForSeek(targetScene);
+    // Render the last millisecond of this scene, not the next scene. Every
+    // scheduled element is therefore visible while playback remains paused.
+    elapsed = offsets[targetScene] + Math.max(0, sceneDefs[targetScene].duration - 1);
     render();
+    experience.classList.add('is-instant-state');
     showControls();
     syncPlayButton();
   }
@@ -2137,9 +2246,11 @@
     else showControls();
   });
 
-  [previousButton, playButton, nextButton].forEach(button => {
+  [beginningButton, previousButton, playButton, nextButton, endButton].forEach(button => {
     button.addEventListener('click', event => event.stopPropagation());
   });
+  beginningButton.addEventListener('click', jumpToCurrentSectionBeginning);
+  endButton.addEventListener('click', jumpToCurrentSectionEnd);
   previousButton.addEventListener('click', () => {
     if (activeScene > 0) jumpTo(activeScene - 1);
   });
