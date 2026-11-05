@@ -1560,6 +1560,48 @@
     thingsNarrationStartMs + thingsNarrationTypewriter.typingDuration + NEW_MEMORY_FINAL_HOLD_MS
   );
 
+  // Scene 50: examination outcomes appear in a 2x2 grid after a two-second
+  // pause once the opening narration has completely finished. Cards reveal in
+  // chronological order and remain visible while the next result is read.
+  const examResultsStage = document.getElementById('examResultsStage');
+  const examResultsIntro = [...examResultsStage.querySelectorAll('.exam-results-copy p')];
+  const examResultsIntroTypewriter = prepareChapterTextTypewriter(examResultsIntro, 'new-memory-glyph');
+  const EXAM_RESULTS_GRID_PAUSE_MS = 2000;
+  const EXAM_RESULTS_WORD_INTERVAL_MS = 330;
+  const examResultCards = [...examResultsStage.querySelectorAll('.exam-result-card')];
+  let examResultsCursor = 0;
+  const examResultsSchedule = examResultCards.map(element => {
+    const result = element.querySelector('p').textContent;
+    const words = (result.match(/[A-Za-z0-9]+(?:['’][A-Za-z0-9]+)*/g) || []).length;
+    const item = { element, at: examResultsCursor, words };
+    examResultsCursor += words * EXAM_RESULTS_WORD_INTERVAL_MS;
+    return item;
+  });
+  const examResultsClosing = [...examResultsStage.querySelectorAll('.exam-results-closing p')];
+  const examResultsClosingStartMs = AFTER_BREAKUP_TEXT_START_MS
+    + examResultsIntroTypewriter.typingDuration
+    + EXAM_RESULTS_GRID_PAUSE_MS
+    + examResultsCursor;
+  const examResultsClosingTypewriter = prepareChapterTextTypewriter(examResultsClosing, 'new-memory-glyph');
+  const examResultsDuration = Math.ceil(
+    examResultsClosingStartMs + examResultsClosingTypewriter.typingDuration + NEW_MEMORY_FINAL_HOLD_MS
+  );
+  const examResultsMobileLayout = window.matchMedia('(max-width: 760px)');
+
+  function keepLatestExamResultVisible(element) {
+    if (!examResultsMobileLayout.matches || !element || examResultsStage.scrollHeight <= examResultsStage.clientHeight + 2) return;
+    const stageRect = examResultsStage.getBoundingClientRect();
+    const itemRect = element.getBoundingClientRect();
+    const itemBottom = itemRect.bottom - stageRect.top + examResultsStage.scrollTop;
+    const visibleBottom = examResultsStage.scrollTop + examResultsStage.clientHeight;
+    if (itemBottom > visibleBottom - 22) {
+      examResultsStage.scrollTo({
+        top: Math.max(0, itemBottom - examResultsStage.clientHeight + 30),
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+    }
+  }
+
   let breakupVideoUserPaused = false;
   let breakupVideoPlayAttempted = false;
   let breakupVideoStoryPauseRequested = false;
@@ -1659,7 +1701,8 @@
     { name: 'after-breakup-hope', duration: afterBreakupHopeDuration },
     { name: 'another-chance', duration: anotherChanceDuration },
     { name: 'what-i-came-to-know', duration: whatICameToKnowDuration },
-    { name: 'things-i-didnt-know', duration: thingsDuration }
+    { name: 'things-i-didnt-know', duration: thingsDuration },
+    { name: 'exam-results', duration: examResultsDuration }
   ];
   const offsets = sceneDefs.map((_, index) =>
     sceneDefs.slice(0, index).reduce((sum, scene) => sum + scene.duration, 0)
@@ -1714,7 +1757,9 @@
     { at: offsets[47], a: [43,30,55], b: [21,15,35], c: [7,6,12], glow: [177,143,186], alpha: .17, x: 50, y: 44, size: 48, wash: [179,126,162], washAlpha: .095, washX: 82, washY: 76 },
     { at: offsets[48], a: [30,24,43], b: [15,12,29], c: [6,5,11], glow: [143,128,171], alpha: .12, x: 51, y: 49, size: 45, wash: [150,108,150], washAlpha: .07, washX: 16, washY: 79 },
     { at: offsets[49], a: [20,16,31], b: [11,9,20], c: [4,4,9], glow: [111,96,145], alpha: .085, x: 50, y: 50, size: 43, wash: [124,87,131], washAlpha: .045, washX: 84, washY: 78 },
-    { at: offsets[49] + sceneDefs[49].duration * .85, a: [12,11,21], b: [8,7,14], c: [3,3,7], glow: [87,79,117], alpha: .055, x: 50, y: 52, size: 40, wash: [91,69,111], washAlpha: .025, washX: 16, washY: 80 }
+    { at: offsets[49] + sceneDefs[49].duration * .85, a: [12,11,21], b: [8,7,14], c: [3,3,7], glow: [87,79,117], alpha: .055, x: 50, y: 52, size: 40, wash: [91,69,111], washAlpha: .025, washX: 16, washY: 80 },
+    { at: offsets[50], a: [17,14,27], b: [9,8,17], c: [3,3,7], glow: [101,89,132], alpha: .07, x: 51, y: 49, size: 42, wash: [112,81,125], washAlpha: .035, washX: 82, washY: 78 },
+    { at: offsets[50] + sceneDefs[50].duration * .88, a: [11,10,18], b: [7,6,12], c: [3,3,6], glow: [80,73,107], alpha: .045, x: 50, y: 52, size: 39, wash: [86,65,105], washAlpha: .02, washX: 17, washY: 80 }
   ];
 
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -1829,6 +1874,10 @@
       thingsStage.querySelectorAll('.things-timeline-track, .things-mobile-track').forEach(track => { track.style.height = '0px'; });
       const narrationContainer = thingsStage.querySelector('.things-narration');
       if (narrationContainer) narrationContainer.classList.remove('is-visible');
+    }
+    if (index === 50 && examResultsStage) {
+      examResultsStage.scrollTop = 0;
+      examResultCards.forEach(card => card.classList.remove('is-visible'));
     }
     scenes.forEach((scene, i) => scene.classList.toggle('is-active', i === index));
     previousButton.disabled = index === 0;
@@ -2071,6 +2120,24 @@
           if (narrationContainer) narrationContainer.classList.add('is-visible');
           keepLatestThingsItemVisible(event.element);
         }
+      });
+    }
+    if (index === 50) {
+      updateNewMemoryTypewriter(examResultsIntroTypewriter, localTime, AFTER_BREAKUP_TEXT_START_MS);
+      examResultsSchedule.forEach(item => {
+        const visible = localTime >= AFTER_BREAKUP_TEXT_START_MS
+          + examResultsIntroTypewriter.typingDuration
+          + EXAM_RESULTS_GRID_PAUSE_MS
+          + item.at;
+        const wasVisible = item.element.classList.contains('is-visible');
+        item.element.classList.toggle('is-visible', visible);
+        if (visible && !wasVisible) keepLatestExamResultVisible(item.element);
+      });
+      examResultsClosingTypewriter.events.forEach(event => {
+        const visible = localTime >= examResultsClosingStartMs + event.at;
+        const wasVisible = event.element.classList.contains('is-visible');
+        event.element.classList.toggle('is-visible', visible);
+        if (visible && !wasVisible) keepLatestExamResultVisible(event.element);
       });
     }
   }
