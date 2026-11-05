@@ -135,12 +135,18 @@ button { font: inherit; }
 .transport-button { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%; color: #e8dfea; background: transparent; cursor: pointer; }
 .transport-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .transport-button:active { background: #ffffff17; }
+.transport-jump { display: flex; width: auto; min-width: 74px; gap: 5px; padding: 0 7px; border-radius: 22px; font-size: 10px; letter-spacing: .01em; white-space: nowrap; }
+.transport-jump svg { width: 15px; height: 15px; flex: 0 0 auto; }
 .transport-main { width: 43px; height: 43px; color: #f7eff8; background: #30243a; box-shadow: 0 0 0 1px #c8add24f inset; }
 .transport-main svg { width: 20px; height: 20px; }
 .pause-symbol { display: none; }
 .experience:not(.is-paused) .pause-symbol { display: block; }
 .experience:not(.is-paused) .play-symbol { display: none; }
 .experience.is-paused .scene, .experience.is-paused .scene * { animation-play-state: paused !important; }
+.experience.is-instant-state .scene,
+.experience.is-instant-state .scene *,
+.experience.is-instant-state .scene *::before,
+.experience.is-instant-state .scene *::after { animation-duration: .001ms !important; animation-delay: 0ms !important; transition-duration: 0ms !important; scroll-behavior: auto !important; }
 .experience.is-paused .phone-screen * { animation-play-state: paused !important; }
 .experience.is-paused .transport-controls { animation-play-state: running !important; }
 .experience.is-paused .grain { animation-play-state: paused !important; }
@@ -161,7 +167,11 @@ button { font: inherit; }
   .bubble-gif { width: min(225px, 78%); }
   .chat-composer { flex-basis: 54px; }
   .closing-stage h2 { font-size: clamp(34px, 8.6vw, 48px); line-height: 1.34; }
-  .transport-controls { bottom: max(20px, env(safe-area-inset-bottom)); }
+  .transport-controls { bottom: max(20px, env(safe-area-inset-bottom)); gap: 3px; padding: 5px 6px; max-width: calc(100vw - 16px); }
+  .transport-button { width: 32px; height: 34px; }
+  .transport-main { width: 39px; height: 39px; }
+  .transport-jump { min-width: 61px; gap: 3px; padding: 0 4px; font-size: 9px; }
+  .transport-jump svg { width: 13px; height: 13px; }
 }
 @media (max-height: 650px) {
   .phone-shell { height: 88svh; min-height: 0; }
@@ -2080,8 +2090,8 @@ button { font: inherit; }
   width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  /* Stretch both columns to the same row height. */
-  align-items: stretch;
+  /* Keep both columns aligned at the top; event cards retain chronological flow. */
+  align-items: start;
   column-gap: clamp(12px, 2vw, 26px);
   row-gap: 0;
   margin-top: 2px;
@@ -2094,26 +2104,28 @@ button { font: inherit; }
   gap: clamp(7px, 1vh, 11px);
   padding-left: 18px;
 }
-/* Three later events distribute vertically to balance the four-event column. */
-.things-timeline-right { justify-content: space-between; }
-.things-timeline-column::before {
-  content: "";
+.things-timeline-right { justify-content: flex-start; }
+.things-timeline-track {
   position: absolute;
   left: 5px;
   top: 9px;
-  bottom: 9px;
   width: 1px;
-  background: repeating-linear-gradient(to bottom, rgba(190,159,204,.72) 0 3px, transparent 3px 8px);
-  opacity: .7;
+  height: 0;
+  background: repeating-linear-gradient(to bottom, rgba(190,159,204,.82) 0 3px, transparent 3px 8px);
+  opacity: .82;
+  transition: height .72s cubic-bezier(.2,.7,.2,1);
+  pointer-events: none;
 }
+.things-mobile-track { display: none; }
 .things-event {
+  display: none;
   position: relative;
   min-width: 0;
   opacity: 0;
   transform: translateY(8px);
   transition: opacity .72s ease, transform .72s cubic-bezier(.2,.7,.2,1);
 }
-.things-event.is-visible { opacity: 1; transform: translateY(0); }
+.things-event.is-visible { display: block; opacity: 1; transform: translateY(0); }
 .things-event::before {
   content: "";
   position: absolute;
@@ -2157,6 +2169,7 @@ button { font: inherit; }
   text-wrap: pretty;
 }
 .things-narration {
+  display: none;
   width: min(1040px, 100%);
   display: flex;
   flex-direction: column;
@@ -2175,6 +2188,7 @@ button { font: inherit; }
   text-wrap: pretty;
 }
 .things-narration p:last-child { color: #f0e7f1; }
+.things-narration.is-visible { display: flex; }
 
 @media (max-width: 760px) {
   .things-stage {
@@ -2313,4 +2327,50 @@ button { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .what-chat-feed { scroll-behavior: auto; }
   .what-chat-row.is-visible { animation-duration: .01ms !important; }
+}
+
+/* Mobile Scene 49: one continuous timeline with automatic follow-scroll.
+   Touch scrolling remains native and becomes available only when content
+   extends beyond the visible stage. Desktop keeps the two-column layout. */
+@media (max-width: 760px) {
+  .things-timeline-grid {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-left: 0;
+  }
+  .things-timeline-column {
+    display: contents;
+  }
+  .things-timeline-column .things-timeline-track { display: none; }
+  .things-mobile-track {
+    display: block;
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    width: 1px;
+    height: 0;
+    background: repeating-linear-gradient(to bottom, rgba(190,159,204,.82) 0 3px, transparent 3px 8px);
+    opacity: .82;
+    transition: height .72s cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+  }
+  .things-event {
+    margin-left: 18px;
+  }
+  .things-event::before {
+    left: -17px;
+  }
+  .things-stage {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    scroll-behavior: smooth;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .things-stage { scroll-behavior: auto !important; }
 }
