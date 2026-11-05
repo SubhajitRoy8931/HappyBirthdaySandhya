@@ -960,8 +960,8 @@
           <h2 class="things-title">The Things I Didn't Know About</h2>
           <p class="things-intro">Our conversation on June 1 revealed a series of events from the final months of our relationship that I had never known about.</p>
         </header>
-        <div class="things-timeline-grid" aria-label="Events revealed during the June 1 conversation">
-          <div class="things-timeline-column things-timeline-left" aria-label="Earlier events">
+        <div class="things-timeline-grid" aria-label="Events revealed during the June 1 conversation"><span class="things-mobile-track" aria-hidden="true"></span>
+          <div class="things-timeline-column things-timeline-left" aria-label="Earlier events"><span class="things-timeline-track" aria-hidden="true"></span>
             <article class="things-event">
               <div class="things-event-card">
                 <p class="things-event-date">December 2025</p>
@@ -991,7 +991,7 @@
               </div>
             </article>
           </div>
-          <div class="things-timeline-column things-timeline-right" aria-label="The events that followed">
+          <div class="things-timeline-column things-timeline-right" aria-label="The events that followed"><span class="things-timeline-track" aria-hidden="true"></span>
             <article class="things-event">
               <div class="things-event-card">
                 <p class="things-event-date">March 4, 2026</p>
@@ -1023,6 +1023,9 @@
     </section>
 
     <nav class="transport-controls" id="transportControls" aria-label="Story controls" aria-hidden="true">
+      <button class="transport-button transport-jump" id="beginningButton" type="button" aria-label="Go to beginning of current section" title="Go to beginning">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6 9 12l9 6V6Z"/></svg><span>Beginning</span>
+      </button>
       <button class="transport-button" id="previousButton" type="button" aria-label="Previous scene" title="Previous">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 6l-10 6 10 6V6Z"/></svg>
       </button>
@@ -1032,6 +1035,9 @@
       </button>
       <button class="transport-button" id="nextButton" type="button" aria-label="Next scene" title="Next">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 6l10 6-10 6V6Z"/></svg>
+      </button>
+      <button class="transport-button transport-jump" id="endButton" type="button" aria-label="Go to end of current section" title="Go to end">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l9 6-9 6V6Z"/></svg><span>End</span>
       </button>
     </nav>
   </main>
