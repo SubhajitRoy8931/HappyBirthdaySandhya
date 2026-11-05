@@ -1,0 +1,2316 @@
+:root {
+  color-scheme: dark;
+  --night: #08060c;
+  --ivory: #f1e9f2;
+  --lavender: #b99acb;
+  --muted: #a093a7;
+  --whatsapp: #075e54;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; background: var(--night); }
+body { overflow: hidden; color: var(--ivory); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+button { font: inherit; }
+.experience {
+  position: relative; width: 100%; height: 100svh; min-height: 520px; overflow: hidden; isolation: isolate;
+  background: radial-gradient(ellipse at 50% 44%, #1b1321 0%, #100b15 38%, #08060c 76%);
+  -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.atmosphere { position: absolute; inset: -20%; z-index: -2; pointer-events: none; background:
+  radial-gradient(ellipse at 50% 45%, #6b4e751c 0%, transparent 40%),
+  radial-gradient(ellipse at 12% 20%, #8e63821c 0%, transparent 28%),
+  radial-gradient(ellipse at 90% 82%, #59476e21 0%, transparent 30%);
+  filter: blur(16px);
+}
+.grain { position: absolute; inset: 0; z-index: 8; opacity: .055; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E"); mix-blend-mode: soft-light; }
+.scene { position: absolute; inset: 0; display: grid; place-items: center; padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom)); opacity: 0; visibility: hidden; pointer-events: none; }
+.scene.is-active { opacity: 1; visibility: visible; pointer-events: auto; }
+.scene-poem.is-active { animation: scene-fade 900ms ease both; }
+.scene-date.is-active { animation: date-scene-in 850ms cubic-bezier(.18,.72,.24,1) both; }
+.scene-chat.is-active { animation: phone-scene-in 600ms ease both; }
+.scene-closing.is-active { animation: closing-scene-in 900ms ease both; }
+@keyframes scene-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes date-scene-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes phone-scene-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes closing-scene-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Opening */
+.poem-stage { width: min(1040px, 100%); position: relative; text-align: center; transform: translateY(-1.5vh); }
+.poem-ornament { display: flex; align-items: center; justify-content: center; gap: 13px; margin: 0 auto 36px; opacity: .75; }
+.poem-ornament span { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, #a987bb); }
+.poem-ornament span:last-child { transform: scaleX(-1); }
+.poem-ornament i { display: block; width: 5px; height: 5px; border: 1px solid #b99acb; transform: rotate(45deg); box-shadow: 0 0 13px #b99acb88; }
+.poem { max-width: 1000px; margin: 0 auto; color: var(--ivory); font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif; font-weight: 400; font-size: clamp(30px, 3.45vw, 48px); line-height: 1.38; letter-spacing: -.028em; text-wrap: pretty; }
+.poem-word { display: inline-block; white-space: nowrap; }
+.glyph { display: inline-block; opacity: 0; filter: blur(5px); transform: translateY(2px); transform-origin: 50% 80%; }
+.glyph.revealed { animation: glyph-appear 155ms ease-out forwards; }
+@keyframes glyph-appear { from { opacity: 0; filter: blur(5px); } to { opacity: 1; filter: blur(0); } }
+
+/* Date */
+.date-stage { width: min(780px, 100%); display: flex; flex-direction: column; align-items: center; text-align: center; transform: translateY(-1vh); }
+.date-kicker { margin-bottom: 27px; color: #b9a0c3; font-size: 9px; font-weight: 500; letter-spacing: .34em; text-indent: .34em; opacity: .9; }
+.date-line { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #b99acb 20%, #ead9ed 50%, #b99acb 80%, transparent); box-shadow: 0 0 14px #b99acb77; }
+.scene-date.is-active .date-line { animation: line-grow 900ms 180ms ease-out forwards; }
+.date-main { margin: 25px 0 8px; font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif; font-size: clamp(42px, 6.1vw, 76px); font-weight: 400; letter-spacing: -.045em; line-height: 1.08; color: #f4edf5; opacity: 0; }
+.scene-date.is-active .date-main { animation: date-text-in 780ms 160ms ease-out forwards; }
+.date-year { color: #c1a8cc; font-size: 13px; letter-spacing: .52em; text-indent: .52em; opacity: 0; }
+.scene-date.is-active .date-year { animation: date-text-in 700ms 360ms ease-out forwards; }
+.date-line-bottom { margin-top: 30px; }
+.scene-date.is-active .date-line-bottom { animation-delay: 420ms; }
+@keyframes line-grow { to { width: min(270px, 58vw); } }
+@keyframes date-text-in { from { opacity: 0; transform: translateY(8px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+
+/* Phone and chat */
+.scene-chat { padding: 16px 15px; }
+.phone-aura { position: absolute; width: min(650px, 92vw); height: min(760px, 88svh); border-radius: 50%; background: radial-gradient(ellipse, #92739b19 0%, #5c42651b 34%, transparent 70%); filter: blur(24px); pointer-events: none; }
+.phone-shell {
+  position: relative; width: min(374px, 88vw); height: min(744px, 88svh); min-height: 480px; padding: 8px; border-radius: 52px;
+  background: linear-gradient(140deg, #625c67 0%, #28242c 12%, #0a090d 43%, #38323d 80%, #111015 100%);
+  border: 1px solid #8b818e66; box-shadow: 0 34px 100px #000b, 0 0 0 1px #ffffff1a inset, 0 0 46px #b99acb14;
+  transform: translateY(10px) scale(.965); opacity: 0;
+}
+.scene-chat.is-active .phone-shell { animation: handset-arrive 1050ms 120ms cubic-bezier(.18,.76,.22,1) forwards; }
+.phone-shell::before { content: ""; position: absolute; inset: 2px; border: 1px solid #ffffff19; border-radius: 49px; pointer-events: none; }
+.phone-side { position: absolute; width: 3px; background: linear-gradient(180deg, #77717e, #28232c); border-radius: 3px; }
+.side-left { height: 68px; top: 145px; left: -3px; }
+.side-right { height: 88px; top: 185px; right: -3px; }
+.phone-screen { position: relative; width: 100%; height: 100%; overflow: hidden; display: flex; flex-direction: column; border-radius: 44px; background: #e8dfd4; box-shadow: 0 0 0 1px #000 inset; }
+.status-bar { flex: 0 0 34px; position: relative; display: flex; justify-content: space-between; align-items: center; padding: 0 19px 0 21px; background: #075e54; color: #fff; }
+.status-time { width: 35px; height: 8px; }
+.dynamic-island { position: absolute; z-index: 2; top: 7px; left: 50%; width: 94px; height: 21px; transform: translateX(-50%); border-radius: 20px; background: #050607; box-shadow: 0 1px 2px #0009; }
+.status-icons { display: flex; align-items: center; gap: 4px; height: 100%; }
+.status-icons svg { width: 15px; height: 13px; fill: none; stroke: #fff; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.status-icons svg:last-child { width: 19px; }
+.battery-level { fill: #fff; stroke: none; }
+.chat-header { flex: 0 0 62px; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 9px; color: #fff; background: #075e54; }
+.back-chevron { width: 22px; display: flex; align-items: center; justify-content: center; }
+.back-chevron svg { width: 21px; height: 21px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.avatar { display: block; flex: 0 0 39px; width: 39px; height: 39px; object-fit: cover; object-position: 50% 64%; border-radius: 50%; border: 1px solid #ffffff55; background: #ddd; }
+.contact-details { flex: 1; min-width: 0; }
+.contact-name { color: #fff; font-size: 15px; font-weight: 500; letter-spacing: .015em; }
+.chat-actions { display: flex; align-items: center; gap: 15px; }
+.chat-actions svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+.chat-actions svg:last-child { width: 17px; }
+.chat-body { position: relative; flex: 1; min-height: 0; overflow: hidden; background: #e8dfd4; }
+.chat-wallpaper { position: absolute; inset: 0; opacity: .3; background-color: #e9dfd3; background-image:
+  radial-gradient(circle at 17px 19px, transparent 0 7px, #b8aa9d 7.5px 8px, transparent 8.5px),
+  radial-gradient(circle at 52px 57px, transparent 0 10px, #c2b4a7 10.5px 11px, transparent 11.5px),
+  linear-gradient(45deg, transparent 48%, #c9bdb1 49%, transparent 50%),
+  linear-gradient(-35deg, transparent 48%, #c9bdb1 49%, transparent 50%);
+  background-size: 74px 82px, 96px 102px, 62px 68px, 80px 75px;
+}
+.chat-flow { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: stretch; gap: 13px; height: 100%; padding: 21px 10px 18px; }
+.message-row { display: flex; width: 100%; opacity: 0; visibility: hidden; transform: translateY(7px) scale(.985); }
+.message-row.visible { visibility: visible; animation: message-arrive 260ms cubic-bezier(.16,.7,.2,1) forwards; }
+@keyframes message-arrive { from { opacity: 0; transform: translateY(7px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.outgoing { justify-content: flex-end; }
+.incoming { justify-content: flex-start; }
+.bubble { position: relative; max-width: 82%; box-shadow: 0 1px 1px #00000012; }
+.bubble-gif { width: min(238px, 76%); padding: 4px; border-radius: 9px 3px 9px 9px; background: #dcf8c6; }
+.bubble-gif::after { content: ""; position: absolute; top: 0; right: -6px; width: 8px; height: 10px; background: #dcf8c6; clip-path: polygon(0 0,100% 0,0 100%); }
+.birthday-frame { width: 100%; overflow: hidden; border-radius: 6px; background: #fff0f4; }
+.birthday-frame img { display: block; width: 100%; height: auto; aspect-ratio: 560 / 390; object-fit: cover; }
+.bubble-text { min-width: 86px; padding: 10px 12px 11px; color: #20272b; font-size: 15px; line-height: 1.25; border-radius: 3px 9px 9px 9px; background: #fff; }
+.outgoing .bubble-text { border-radius: 9px 3px 9px 9px; background: #dcf8c6; }
+.bubble-text::after { content: ""; position: absolute; top: 0; left: -6px; width: 8px; height: 10px; background: #fff; clip-path: polygon(100% 0,100% 100%,0 0); }
+.outgoing .bubble-text::after { left: auto; right: -6px; background: #dcf8c6; clip-path: polygon(0 0,100% 0,100% 100%); }
+.chat-composer { flex: 0 0 58px; display: flex; align-items: center; gap: 8px; padding: 6px 9px 8px; background: #f4f1ec; }
+.composer-plus { color: #526168; font-size: 25px; font-weight: 300; line-height: 1; }
+.composer-input { flex: 1; height: 39px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; border: 1px solid #e4e1dd; border-radius: 21px; background: #fff; color: #8a969a; font-size: 13px; }
+.composer-smile { color: #8b969a; font-size: 20px; line-height: 1; }
+.composer-camera, .composer-mic { width: 20px; height: 20px; fill: none; stroke: #657277; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.home-indicator { position: absolute; bottom: 4px; left: 50%; width: 94px; height: 4px; transform: translateX(-50%); border-radius: 8px; background: #111; opacity: .75; }
+@keyframes handset-arrive { from { opacity: 0; transform: translateY(30px) scale(.94); filter: blur(7px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+
+/* Closing */
+.closing-stage { width: min(940px, 100%); text-align: center; transform: translateY(-1vh); }
+.closing-rule { width: 0; height: 1px; margin: 0 auto 34px; background: linear-gradient(90deg, transparent, #b99acb, #f1e9f2, #b99acb, transparent); box-shadow: 0 0 15px #b99acb77; }
+.scene-closing.is-active .closing-rule { animation: line-grow 950ms 120ms ease-out forwards; }
+.closing-stage h2 { max-width: 900px; margin: 0 auto; color: var(--ivory); font: 400 clamp(34px, 4.4vw, 60px)/1.3 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.035em; opacity: 0; }
+.closing-rule-bottom { margin: 34px auto 0; }
+.scene-closing.is-active .closing-rule-bottom { animation-delay: 380ms; }
+
+/* Minimal controls: appear only while paused */
+.transport-controls { position: absolute; z-index: 20; left: 50%; bottom: max(25px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: center; gap: 8px; padding: 7px 10px; border: 1px solid #ffffff22; border-radius: 40px; background: #100b16b8; box-shadow: 0 10px 35px #0008, 0 0 22px #b99acb12; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); opacity: 0; visibility: hidden; pointer-events: none; transform: translate(-50%, 10px); transition: opacity 180ms ease, transform 180ms ease, visibility 180ms; }
+.experience.controls-visible .transport-controls { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); }
+.transport-button { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%; color: #e8dfea; background: transparent; cursor: pointer; }
+.transport-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.transport-button:active { background: #ffffff17; }
+.transport-main { width: 43px; height: 43px; color: #f7eff8; background: #30243a; box-shadow: 0 0 0 1px #c8add24f inset; }
+.transport-main svg { width: 20px; height: 20px; }
+.pause-symbol { display: none; }
+.experience:not(.is-paused) .pause-symbol { display: block; }
+.experience:not(.is-paused) .play-symbol { display: none; }
+.experience.is-paused .scene, .experience.is-paused .scene * { animation-play-state: paused !important; }
+.experience.is-paused .phone-screen * { animation-play-state: paused !important; }
+.experience.is-paused .transport-controls { animation-play-state: running !important; }
+.experience.is-paused .grain { animation-play-state: paused !important; }
+@media (max-width: 600px) {
+  .experience { min-height: 500px; }
+  .scene { padding-left: 23px; padding-right: 23px; }
+  .poem-stage { transform: translateY(-1vh); }
+  .poem-ornament { margin-bottom: 26px; }
+  .poem { font-size: clamp(28px, 7.25vw, 39px); line-height: 1.43; letter-spacing: -.032em; }
+  .date-kicker { font-size: 8px; letter-spacing: .26em; text-indent: .26em; }
+  .date-main { font-size: clamp(39px, 10vw, 55px); }
+  .phone-shell { width: min(354px, 90vw); height: min(720px, 85svh); min-height: 465px; border-radius: 47px; padding: 7px; }
+  .phone-screen { border-radius: 40px; }
+  .status-bar { flex-basis: 31px; }
+  .chat-header { flex-basis: 58px; }
+  .avatar { width: 36px; height: 36px; flex-basis: 36px; }
+  .chat-flow { padding: 18px 8px 14px; gap: 11px; }
+  .bubble-gif { width: min(225px, 78%); }
+  .chat-composer { flex-basis: 54px; }
+  .closing-stage h2 { font-size: clamp(34px, 8.6vw, 48px); line-height: 1.34; }
+  .transport-controls { bottom: max(20px, env(safe-area-inset-bottom)); }
+}
+@media (max-height: 650px) {
+  .phone-shell { height: 88svh; min-height: 0; }
+  .status-bar { flex-basis: 26px; }
+  .chat-header { flex-basis: 51px; }
+  .chat-composer { flex-basis: 49px; }
+  .chat-flow { gap: 8px; padding-top: 13px; }
+  .bubble-gif { width: min(205px, 73%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+  .scene, .scene *, .phone-shell, .glyph, .date-line, .closing-rule { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* The Days Between — a sequence of restrained memory compositions */
+.chapter-overline {
+  color: #b9a0c3; font-size: 9px; font-weight: 500; letter-spacing: .3em;
+  text-indent: .3em; text-align: center; opacity: .88;
+}
+.scene-days-intro.is-active { animation: days-scene-in 850ms ease both; }
+@keyframes days-scene-in { from { opacity: 0; filter: blur(4px); } to { opacity: 1; filter: blur(0); } }
+.days-intro-stage { width: min(840px, 100%); text-align: center; transform: translateY(-1vh); }
+.days-title {
+  margin: 22px 0 34px; color: var(--ivory); font: 400 clamp(42px, 6vw, 72px)/1.08 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.045em; opacity: 0;
+}
+.scene-days-intro.is-active .days-title { animation: date-text-in 850ms 220ms ease-out forwards; }
+.interval-track { display: flex; align-items: center; gap: 15px; width: min(570px, 94%); margin: 0 auto 36px; }
+.interval-date { color: #c1a8cc; font-size: 9px; letter-spacing: .18em; white-space: nowrap; opacity: 0; }
+.scene-days-intro.is-active .interval-start { animation: date-text-in 500ms 570ms ease-out forwards; }
+.scene-days-intro.is-active .interval-end { animation: date-text-in 500ms 1100ms ease-out forwards; }
+.interval-line { flex: 1; height: 1px; background: #ffffff20; position: relative; overflow: hidden; }
+.interval-line i { display: block; width: 0; height: 100%; background: linear-gradient(90deg, #8d719b, #e9dced); box-shadow: 0 0 12px #b99acb99; }
+.scene-days-intro.is-active .interval-line i { animation: interval-grow 1250ms 650ms ease-out forwards; }
+@keyframes interval-grow { to { width: 100%; } }
+.days-intro-copy { width: min(700px, 100%); margin: 0 auto; color: #d4cbd8; font: 400 clamp(15px, 1.55vw, 18px)/1.8 "Iowan Old Style", "Palatino Linotype", Georgia, serif; }
+.days-intro-copy p { margin: 0 auto 10px; opacity: 0; }
+@keyframes copy-rise { from { opacity: 0; transform: translateY(9px); filter: blur(4px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+/* Word-count narrative timing: JS reveals one complete paragraph line at a time. */
+.timed-copy.is-revealed { animation: copy-rise 650ms ease-out forwards; }
+.timed-list-item.is-revealed { animation: archive-item-in 550ms ease-out forwards; }
+.typed-word { display: inline-block; white-space: nowrap; }
+.typed-glyph { display: inline-block; opacity: 0; filter: blur(5px); transform: translateY(2px); }
+.typed-glyph.revealed { animation: glyph-appear 155ms ease-out forwards; }
+
+
+.scene-phones.is-active { animation: phones-scene-in 900ms cubic-bezier(.18,.72,.24,1) both; }
+@keyframes phones-scene-in { from { opacity: 0; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
+.phones-stage { width: min(900px, 100%); text-align: center; transform: translateY(-1vh); }
+.phones-title { margin: 22px 0 46px; color: var(--ivory); font: 400 clamp(34px, 4.5vw, 58px)/1.15 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.035em; opacity: 0; }
+.scene-phones.is-active .phones-title { animation: copy-rise 750ms 180ms ease-out forwards; }
+.borrowed-layout { position: relative; display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: clamp(64px, 17vw, 150px); width: min(640px, 100%); margin: 0 auto; padding: 4px 20px 0; }
+.borrowed-phone { display: flex; flex-direction: column; align-items: center; gap: 15px; opacity: 0; }
+.scene-phones.is-active .borrowed-her { animation: card-in-left 850ms 500ms cubic-bezier(.18,.72,.24,1) forwards; }
+.scene-phones.is-active .borrowed-mine { animation: card-in-right 850ms 800ms cubic-bezier(.18,.72,.24,1) forwards; }
+.mini-handset { position: relative; width: 112px; height: 190px; padding: 9px; border: 1px solid #9e94a5; border-radius: 21px; background: linear-gradient(145deg, #49434e, #17131c 48%, #302a35); box-shadow: 0 22px 55px #0008, inset 0 0 0 2px #ffffff13; }
+.mini-handset-mine { background: linear-gradient(145deg, #56505a, #17131b 48%, #28222e); }
+.mini-speaker { position: absolute; top: 5px; left: 50%; width: 27px; height: 3px; transform: translateX(-50%); border-radius: 8px; background: #887f8e; }
+.mini-screen { display: block; width: 100%; height: 100%; border-radius: 13px; background: radial-gradient(ellipse at 50% 42%, #49344f, #17111e 76%); box-shadow: inset 0 0 0 1px #ffffff13; }
+.mini-home { position: absolute; bottom: 5px; left: 50%; width: 7px; height: 7px; transform: translateX(-50%); border: 1px solid #827989; border-radius: 50%; }
+.borrowed-label { color: #b99acb; font-size: 9px; letter-spacing: .2em; text-align: center; }
+.whatsapp-flight { position: absolute; z-index: 3; top: 50%; left: 50%; width: 42px; height: 42px; margin: -21px 0 0 -21px; opacity: 0; filter: drop-shadow(0 6px 15px #0008) drop-shadow(0 0 12px #20b96b55); pointer-events: none; }
+.whatsapp-flight svg { display: block; width: 100%; height: 100%; }
+.scene-phones.is-active .whatsapp-outbound { animation: whatsapp-outbound 8.4s 1.3s ease-in-out infinite; }
+.scene-phones.is-active .whatsapp-return { animation: whatsapp-return 8.4s 1.3s ease-in-out infinite; }
+@keyframes whatsapp-outbound {
+  0%, 3% { opacity: 0; transform: translate(calc(-50% - var(--travel, clamp(80px, 25vw, 188px))), 22px) scale(.78) rotate(-8deg); }
+  9% { opacity: 1; }
+  24% { transform: translate(calc(-50% - clamp(38px, 12vw, 90px)), -2px) scale(1) rotate(2deg); opacity: 1; }
+  39% { transform: translate(-50%, -27px) scale(1.04) rotate(5deg); opacity: 1; }
+  47% { transform: translate(calc(-50% + clamp(38px, 12vw, 90px)), -5px) scale(.98) rotate(1deg); opacity: 1; }
+  54% { transform: translate(calc(-50% + var(--travel, clamp(80px, 25vw, 188px))), 18px) scale(.82) rotate(0); opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes whatsapp-return {
+  0%, 49% { opacity: 0; transform: translate(calc(-50% + var(--travel, clamp(80px, 25vw, 188px))), 18px) scale(.82) rotate(0); }
+  55% { opacity: 1; }
+  70% { transform: translate(calc(-50% + clamp(38px, 12vw, 90px)), -4px) scale(1) rotate(-2deg); opacity: 1; }
+  83% { transform: translate(-50%, -25px) scale(1.04) rotate(-5deg); opacity: 1; }
+  93% { transform: translate(calc(-50% - clamp(38px, 12vw, 90px)), -2px) scale(.98) rotate(-1deg); opacity: 1; }
+  100% { transform: translate(calc(-50% - var(--travel, clamp(80px, 25vw, 188px))), 22px) scale(.78) rotate(0); opacity: 0; }
+}
+@keyframes card-in-left { to { opacity: 1; transform: translateX(0); } }
+@keyframes card-in-right { to { opacity: 1; transform: translateX(0); } }
+.borrowed-label { color: #b99acb; font-size: 9px; letter-spacing: .24em; }
+.phones-footnote { max-width: 650px; margin: 31px auto 0; color: #e0d5e3; font: 400 clamp(16px, 1.75vw, 21px)/1.65 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 1; }
+.phones-nokia-note { max-width: 590px; margin: 10px auto 0; color: #a99cae; font: 400 clamp(12px, 1.2vw, 14px)/1.6 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 1; }
+
+.scene-name.is-active { animation: name-scene-in 900ms ease both; }
+@keyframes name-scene-in { from { opacity: 0; } to { opacity: 1; } }
+.name-stage { width: min(800px, 100%); text-align: center; transform: translateY(-1vh); }
+.name-lead { max-width: 570px; margin: 44px auto 20px; color: #d8cfdb; font: 400 clamp(18px, 2.2vw, 25px)/1.55 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 0; }
+.memory-name { margin: 2px auto 24px; color: #f2eaf4; font: 400 clamp(55px, 10vw, 112px)/1.04 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: .11em; text-indent: .11em; opacity: 0; filter: blur(10px); }
+.memory-name.is-revealed { animation: name-focus 1500ms cubic-bezier(.18,.72,.24,1) forwards; }
+@keyframes name-focus { from { opacity: 0; filter: blur(10px); transform: scale(1.035); letter-spacing: .2em; } to { opacity: 1; filter: blur(0); transform: scale(1); letter-spacing: .11em; } }
+.name-follow { max-width: 530px; margin: 0 auto; color: #bdb1c4; font: 400 clamp(15px, 1.7vw, 19px)/1.7 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 0; }
+
+.scene-photo.is-active { animation: photo-scene-in 1000ms cubic-bezier(.2,.7,.2,1) both; }
+@keyframes photo-scene-in { from { opacity: 0; filter: blur(7px); transform: scale(.985); } to { opacity: 1; filter: blur(0); transform: scale(1); } }
+.photo-memory-stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 330px); align-items: center; gap: clamp(30px, 7vw, 90px); width: min(900px, 100%); transform: translateY(-1vh); }
+.photo-copy { max-width: 480px; }
+.photo-copy p { max-width: 430px; margin: 0 0 15px; color: #d7cdda; font: 400 clamp(14px, 1.45vw, 17px)/1.65 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 0; }
+.photo-copy .photo-beat-four { color: #f1e9f2; font-size: clamp(18px, 2vw, 23px); }
+.photo-copy .photo-beat-five { color: #c6b6ce; margin-top: 8px; }
+.photo-copy p { opacity: 0; }
+.memory-photo-frame { margin: 0; width: 100%; padding: 10px 10px 14px; border: 1px solid #ffffff20; border-radius: 5px; background: linear-gradient(145deg, #211a28, #100c15); box-shadow: 0 24px 70px #0008, 0 0 45px #b99acb0d; opacity: 0; transform: translateY(18px) rotate(1deg) scale(.97); }
+.memory-photo-frame.is-revealed { animation: photo-frame-reveal 1200ms cubic-bezier(.18,.76,.22,1) forwards; }
+@keyframes photo-frame-reveal { to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
+.memory-photo-frame img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: center; border-radius: 2px; background: #1b1520; }
+.memory-photo-frame figcaption { margin-top: 13px; color: #a997b3; text-align: center; font-size: 8px; letter-spacing: .22em; }
+
+.scene-archive.is-active { animation: archive-scene-in 900ms ease both; }
+@keyframes archive-scene-in { from { opacity: 0; clip-path: inset(0 0 0 12%); } to { opacity: 1; clip-path: inset(0); } }
+.archive-stage { width: min(960px, 100%); transform: translateY(-1vh); }
+.archive-stage > .chapter-overline { margin-bottom: 35px; }
+.archive-layout { display: grid; grid-template-columns: minmax(220px, .9fr) minmax(0, 1.1fr); gap: clamp(35px, 7vw, 90px); align-items: center; }
+.archive-list { border-left: 1px solid #b99acb55; padding: 5px 0 5px 25px; }
+.archive-item { position: relative; margin: 0 0 22px; color: #c8bdcd; font: 400 clamp(18px, 2vw, 24px)/1.3 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 0; transform: translateX(-10px); }
+.archive-item:last-child { margin-bottom: 0; }
+.archive-item::before { content: ""; position: absolute; left: -30px; top: .52em; width: 7px; height: 7px; border-radius: 50%; background: #b99acb; box-shadow: 0 0 12px #b99acb77; }
+.archive-item.is-revealed { animation: archive-item-in 550ms ease-out forwards; }
+@keyframes archive-item-in { to { opacity: 1; transform: translateX(0); } }
+.archive-reflection p { margin: 0 0 17px; color: #cfc5d4; font: 400 clamp(16px, 1.8vw, 21px)/1.65 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 0; }
+.archive-reflection .archive-final-line { color: #f0e7f2; font-size: clamp(18px, 2vw, 24px); }
+
+.scene-nov24.is-active { animation: nov24-scene-in 850ms ease both; }
+@keyframes nov24-scene-in { from { opacity: 0; } to { opacity: 1; } }
+.nov24-card { width: min(650px, 100%); padding: 42px 30px; text-align: center; border: 1px solid #b99acb35; background: linear-gradient(150deg, #ffffff06, #ffffff01); box-shadow: 0 30px 100px #0005; transform: perspective(900px) rotateX(8deg) translateY(22px); opacity: 0; }
+.scene-nov24.is-active .nov24-card { animation: date-card-turn 1150ms 100ms cubic-bezier(.18,.72,.24,1) forwards; }
+@keyframes date-card-turn { to { transform: perspective(900px) rotateX(0) translateY(0); opacity: 1; } }
+.nov24-rule { width: 0; height: 1px; margin: 28px auto 24px; background: linear-gradient(90deg, transparent, #b99acb, #f1e9f2, #b99acb, transparent); box-shadow: 0 0 13px #b99acb66; }
+.scene-nov24.is-active .nov24-rule { animation: line-grow 850ms 400ms ease-out forwards; }
+.nov24-card h2 { margin: 0; color: #f3ebf4; font: 400 clamp(45px, 6.3vw, 76px)/1.08 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.045em; }
+.nov24-year { margin-top: 12px; color: #c1a8cc; font-size: 12px; letter-spacing: .45em; text-indent: .45em; }
+.nov24-card p { margin: 30px auto 0; color: #d5cbd9; font: 400 clamp(16px, 1.8vw, 20px)/1.6 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 0; }
+.nov24-rule-bottom { margin-bottom: 0; }
+.scene-nov24.is-active .nov24-rule-bottom { animation-delay: 800ms; }
+
+@media (max-width: 650px) {
+  .days-title { font-size: clamp(38px, 10vw, 55px); margin: 18px 0 27px; }
+  .interval-track { gap: 10px; margin-bottom: 26px; }
+  .days-intro-copy { font-size: 15px; line-height: 1.65; }
+  .days-intro-copy p { margin-bottom: 9px; }
+  .borrowed-layout { grid-template-columns: 1fr 1fr; gap: clamp(48px, 15vw, 76px); max-width: 390px; padding: 0 3px; }
+  .mini-handset { width: 82px; height: 145px; border-radius: 17px; padding: 7px; }
+  .mini-screen { border-radius: 10px; }
+  .borrowed-phone { gap: 11px; }
+  .borrowed-label { font-size: 7px; letter-spacing: .13em; }
+  .whatsapp-flight { width: 34px; height: 34px; margin: -17px 0 0 -17px; }
+  .scene-phones.is-active .whatsapp-outbound, .scene-phones.is-active .whatsapp-return { --travel: clamp(72px, 24vw, 98px); }
+  .phones-footnote { margin-top: 23px; font-size: 15px; }
+  .phones-nokia-note { max-width: 330px; margin-top: 8px; font-size: 12px; }
+  .phones-title { margin: 18px 0 26px; font-size: clamp(30px, 8vw, 42px); }
+  .name-lead { margin-top: 38px; font-size: 19px; }
+  .memory-name { font-size: clamp(44px, 12vw, 70px); letter-spacing: .08em; text-indent: .08em; }
+  .name-follow { font-size: 16px; }
+  .photo-memory-stage { grid-template-columns: 1fr; gap: 12px; width: min(420px, 100%); transform: none; }
+  .photo-copy { width: 100%; max-width: none; }
+  .photo-copy p { font-size: 14px; line-height: 1.5; margin-bottom: 8px; }
+  .photo-copy .photo-beat-four { font-size: 16px; }
+  .photo-copy .photo-beat-five { margin-top: 4px; }
+  .memory-photo-frame { width: min(225px, 64vw); justify-self: center; padding: 6px 6px 10px; }
+  .memory-photo-frame figcaption { font-size: 7px; letter-spacing: .13em; }
+  .archive-stage > .chapter-overline { margin-bottom: 27px; }
+  .archive-layout { grid-template-columns: 1fr; gap: 26px; }
+  .archive-list { display: flex; flex-direction: column; gap: 11px; padding: 0 0 0 17px; }
+  .archive-item { font-size: 16px; margin: 0; }
+  .archive-item::before { left: -22px; width: 6px; height: 6px; }
+  .archive-reflection p { font-size: 15px; margin-bottom: 10px; }
+  .archive-reflection .archive-final-line { font-size: 17px; }
+  .nov24-card { padding: 34px 18px; }
+  .nov24-card h2 { font-size: clamp(41px, 11vw, 60px); }
+  .nov24-card p { margin-top: 24px; font-size: 16px; }
+}
+@media (max-width: 380px) {
+  .scene { padding-left: 17px; padding-right: 17px; }
+  .photo-memory-stage { gap: 10px; }
+  .photo-copy p { font-size: 13px; line-height: 1.48; margin-bottom: 7px; }
+  .memory-photo-frame { width: min(205px, 62vw); }
+  .archive-layout { gap: 22px; }
+  .archive-list { gap: 9px; }
+  .archive-item { font-size: 14px; }
+}
+
+/* November 24–25 — one continuous atmosphere, carried across every scene. */
+.atmosphere {
+  inset: -18%;
+  background:
+    radial-gradient(ellipse var(--glow-size, 48%) 62% at var(--glow-x, 50%) var(--glow-y, 45%), rgba(var(--glow-rgb, 125, 91, 145), var(--glow-alpha, .075)) 0%, transparent 72%),
+    radial-gradient(ellipse 42% 38% at var(--wash-x, 15%) var(--wash-y, 76%), rgba(var(--wash-rgb, 139, 91, 119), var(--wash-alpha, .035)) 0%, transparent 76%),
+    linear-gradient(145deg, var(--bg-a, #1b1321) 0%, var(--bg-b, #100b15) 54%, var(--bg-c, #08060c) 100%);
+  filter: blur(23px);
+  transform: translateZ(0);
+}
+.chapter-story-stage, .sunset-stage, .nerves-stage, .confession-poem-stage, .night-stage, .yes-stage, .afterglow-stage {
+  position: relative;
+  width: min(850px, 100%);
+  margin: 0 auto;
+  text-align: center;
+  transform: translateY(-1vh);
+}
+.chapter-story-stage .chapter-overline,
+.sunset-stage .chapter-overline,
+.nerves-stage .chapter-overline,
+.confession-poem-stage .chapter-overline,
+.night-stage .chapter-overline,
+.yes-stage .chapter-overline,
+.afterglow-stage .chapter-overline { margin-bottom: 28px; }
+.story-heading {
+  max-width: 790px;
+  margin: 0 auto 31px;
+  color: #f1e9f2;
+  font: 400 clamp(35px, 5.5vw, 65px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+  opacity: 0;
+}
+.scene-cancelled.is-active, .scene-arrival.is-active, .scene-sunset.is-active,
+.scene-nerves.is-active, .scene-confession-poem.is-active, .scene-reply-wait.is-active,
+.scene-night.is-active, .scene-afterglow.is-active { animation: chapter-scene-in 950ms ease both; }
+@keyframes chapter-scene-in { from { opacity: 0; filter: blur(5px); } to { opacity: 1; filter: blur(0); } }
+.scene-cancelled.is-active .story-heading,
+.scene-arrival.is-active .story-heading,
+.scene-sunset.is-active .story-heading,
+.scene-nerves.is-active .story-heading,
+.scene-reply-wait.is-active .story-heading,
+.scene-night.is-active .story-heading,
+.scene-afterglow.is-active .story-heading { animation: date-text-in 850ms 180ms ease-out forwards; }
+.story-copy { width: min(690px, 100%); margin: 0 auto; }
+.story-copy p {
+  margin: 0 auto 17px;
+  color: #cec3d2;
+  font: 400 clamp(16px, 1.75vw, 20px)/1.72 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+  opacity: 0;
+}
+.story-copy p:last-child { margin-bottom: 0; }
+.story-copy p.is-revealed { animation: copy-rise 680ms ease-out forwards; }
+.cancelled-stage { max-width: 820px; }
+.cancelled-copy { width: min(720px, 100%); }
+.arrival-stage { max-width: 830px; }
+.arrival-heading { font-size: clamp(42px, 7vw, 82px); }
+.arrival-copy { width: min(660px, 100%); }
+.arrival-copy p:first-child { color: #e5d9e8; font-size: clamp(18px, 2.15vw, 24px); }
+.sunset-stage { width: min(800px, 100%); }
+.sunset-stage .story-heading { max-width: 760px; }
+.sunset-horizon {
+  position: relative;
+  width: min(560px, 80%);
+  height: 1px;
+  margin: 2px auto 30px;
+  background: linear-gradient(90deg, transparent, #d8a6b466 22%, #d7b5d866 50%, #d8a6b466 78%, transparent);
+  opacity: .75;
+  transform: scaleX(.1);
+  transform-origin: center;
+}
+.scene-sunset.is-active .sunset-horizon { animation: horizon-open 1800ms 350ms ease-out forwards; }
+@keyframes horizon-open { to { transform: scaleX(1); opacity: .95; } }
+.sunset-horizon span {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #e3b3bf;
+  box-shadow: 0 0 22px 8px #cd8fa14a;
+  transform: translate(-50%, -50%);
+}
+.sunset-copy { width: min(660px, 100%); }
+.nerves-stage { width: min(760px, 100%); }
+.nerves-heading { font-size: clamp(36px, 5.2vw, 60px); }
+.nerves-copy p:first-child { color: #e2d7e7; font-size: clamp(18px, 2.2vw, 24px); }
+.nerves-pulse { width: 120px; height: 23px; display: flex; align-items: center; justify-content: center; gap: 5px; margin: 34px auto 0; opacity: 0; }
+.scene-nerves.is-active .nerves-pulse { animation: soft-arrive 800ms 2.1s ease forwards; }
+.nerves-pulse span { display: block; width: 2px; border-radius: 3px; background: #c8a6d2; box-shadow: 0 0 12px #ba8fcf77; }
+.nerves-pulse span:nth-child(1) { height: 8px; }
+.nerves-pulse span:nth-child(2) { height: 21px; }
+.nerves-pulse span:nth-child(3) { height: 12px; }
+@keyframes soft-arrive { to { opacity: .45; } }
+.confession-poem-stage { width: min(720px, 100%); transform: translateY(-.5vh); }
+.confession-poem-intro {
+  width: min(625px, 100%);
+  margin: -7px auto 17px;
+  color: #bfb1c6;
+  font: 400 clamp(14px, 1.65vw, 17px)/1.48 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: .004em;
+}
+.confession-poem-intro p { margin: 0 0 5px; opacity: 0; }
+.confession-poem-kicker { margin-top: 21px; opacity: 0; }
+.confession-poem-kicker.is-revealed { animation: date-text-in 650ms ease-out forwards; }
+.confession-poem-title {
+  margin: 13px 0 25px;
+  color: #f0e6f2;
+  font: italic 400 clamp(35px, 4.8vw, 53px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.025em;
+  opacity: 0;
+}
+.confession-poem-title.is-revealed { animation: date-text-in 850ms ease-out forwards; }
+.confession-poem-lines { width: min(630px, 100%); margin: 0 auto; }
+.confession-poem-lines p {
+  margin: 0 0 7px;
+  color: #d5c8dc;
+  font: 400 clamp(16px, 2vw, 21px)/1.35 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: .005em;
+  opacity: 0;
+}
+.confession-poem-lines p:nth-child(6) { color: #f0e3f2; font-style: italic; font-size: clamp(20px, 2.5vw, 27px); margin: 9px 0 14px; }
+.confession-poem-lines p.is-revealed { animation: copy-rise 630ms ease-out forwards; }
+.full-poem-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #b99acb72;
+  color: #d6c2dc;
+  font-size: 11px;
+  letter-spacing: .045em;
+  text-decoration: none;
+  opacity: 0;
+  transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.full-poem-link:hover { color: #fff1ff; border-color: #e4c8ed; transform: translateY(-1px); }
+.full-poem-link.is-revealed { animation: copy-rise 650ms ease-out forwards; }
+.full-poem-link span { color: #b99acb; font-size: 14px; }
+.poem-source-note { margin-top: 24px; color: #9d8da8; font-size: 8px; letter-spacing: .24em; opacity: .75; }
+.reply-stage { max-width: 780px; }
+.reply-copy { width: min(650px, 100%); }
+.reply-copy p:last-child { color: #e3d7e8; }
+.night-stage { width: min(820px, 100%); }
+.night-stage .story-heading { margin-bottom: 28px; }
+.night-copy { width: min(700px, 100%); }
+.night-copy p {
+  opacity: 1;
+  color: #cec3d2;
+  margin-bottom: 16px;
+  font-size: clamp(16px, 1.72vw, 20px);
+}
+.night-copy strong { color: inherit; font-weight: 700; }
+.night-word { display: inline-block; white-space: nowrap; }
+.night-glyph {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(3px);
+  transform: translateY(2px);
+}
+.night-glyph.is-visible { animation: night-letter-in 105ms ease-out forwards; }
+@keyframes night-letter-in { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+.night-final { margin-top: 6px !important; }
+.experience.is-paused .night-glyph.is-visible,
+.experience.is-paused .night-glimmer { animation-play-state: paused; }
+.night-glimmer { width: 4px; height: 4px; margin: 29px auto 0; border-radius: 50%; background: #a58bb9; opacity: 0; box-shadow: 0 0 24px 7px #9a7eae33; }
+.scene-night.is-active .night-glimmer { animation: glimmer-breathe 4s 1s ease-in-out infinite; }
+@keyframes glimmer-breathe { 0%,100% { opacity: .12; transform: scale(.8); } 50% { opacity: .55; transform: scale(1.6); } }
+.scene-yes.is-active { animation: chapter-scene-in 1100ms ease both; }
+.yes-stage { width: min(700px, 100%); transform: translateY(-1vh); }
+.yes-stage .chapter-overline { margin-bottom: 36px; }
+.yes-date {
+  font-size: clamp(14px, 1.55vw, 17px);
+  letter-spacing: .19em;
+  font-weight: 550;
+  text-transform: none;
+  opacity: 0;
+  transform: translateY(5px);
+  text-shadow: 0 0 18px #d8b9df22;
+}
+.yes-date.is-revealed { animation: yes-date-arrive 1000ms ease-out forwards; }
+@keyframes yes-date-arrive { to { opacity: 1; transform: translateY(0); } }
+.yes-rule { width: min(230px, 55vw); height: 1px; margin: 0 auto 36px; background: linear-gradient(90deg, transparent, #c6a5cb88, #f0dbe8, #c6a5cb88, transparent); transform: scaleX(.1); opacity: 0; }
+.scene-yes.is-active .yes-rule { animation: yes-rule-open 2.1s 300ms ease-out forwards; }
+.scene-yes.is-active .yes-rule-bottom { animation-delay: 4s; }
+@keyframes yes-rule-open { to { transform: scaleX(1); opacity: .8; } }
+.yes-word {
+  margin: 0;
+  color: #f6edf4;
+  font: 400 clamp(84px, 15vw, 160px)/1 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.06em;
+  opacity: 0;
+  filter: blur(9px);
+  transform: translateY(14px) scale(.98);
+}
+.yes-word.is-revealed { animation: yes-word-arrive 1700ms cubic-bezier(.18,.72,.24,1) forwards; }
+@keyframes yes-word-arrive { to { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); } }
+.yes-caption { margin: 24px 0 37px; color: #d5c5d9; font: 400 clamp(15px, 1.8vw, 19px)/1.5 "Iowan Old Style", Georgia, serif; letter-spacing: .02em; opacity: 0; }
+.yes-caption.is-revealed { animation: copy-rise 900ms ease-out forwards; }
+.yes-rule-bottom { margin-bottom: 0; }
+.afterglow-stage { width: min(850px, 100%); }
+.afterglow-heading { max-width: 820px; font-size: clamp(34px, 5.1vw, 61px); }
+.afterglow-copy { width: min(680px, 100%); }
+.afterglow-copy p:first-child { color: #e8dce9; }
+.afterglow-copy .afterglow-final { margin-top: 24px; color: #f2e7f1; font-size: clamp(18px, 2vw, 23px); }
+
+@media (max-width: 650px) {
+  .chapter-story-stage, .sunset-stage, .nerves-stage, .confession-poem-stage, .night-stage, .yes-stage, .afterglow-stage { transform: none; }
+  .chapter-story-stage .chapter-overline, .sunset-stage .chapter-overline,
+  .nerves-stage .chapter-overline, .confession-poem-stage .chapter-overline,
+  .night-stage .chapter-overline, .yes-stage .chapter-overline,
+  .afterglow-stage .chapter-overline { margin-bottom: 21px; }
+  .story-heading { margin-bottom: 21px; font-size: clamp(31px, 8.5vw, 44px); line-height: 1.15; }
+  .story-copy { width: min(560px, 100%); }
+  .story-copy p { font-size: 15px; line-height: 1.58; margin-bottom: 12px; }
+  .arrival-heading { font-size: clamp(39px, 10vw, 54px); }
+  .arrival-copy p:first-child, .nerves-copy p:first-child { font-size: 17px; }
+  .sunset-horizon { margin: 0 auto 20px; }
+  .nerves-pulse { margin-top: 24px; }
+  .confession-poem-stage { transform: none; }
+  .confession-poem-title { margin: -3px 0 15px; }
+  .confession-poem-intro { margin: -3px auto 12px; font-size: 13px; line-height: 1.38; }
+  .confession-poem-kicker { margin-top: 15px; }
+  .confession-poem-intro p { margin-bottom: 4px; }
+  .confession-poem-lines p { font-size: clamp(14px, 3.8vw, 17px); line-height: 1.27; margin-bottom: 4px; }
+  .full-poem-link { margin-top: 15px; font-size: 10px; }
+  .confession-poem-lines p:nth-child(6) { font-size: clamp(18px, 4.8vw, 22px); margin: 7px 0 10px; }
+  .poem-source-note { margin-top: 17px; font-size: 7px; }
+  .night-copy p { font-size: 15px; line-height: 1.58; margin-bottom: 13px; }
+  .yes-word { font-size: clamp(88px, 24vw, 128px); }
+  .yes-caption { margin: 19px 0 29px; }
+  .afterglow-copy .afterglow-final { margin-top: 17px; font-size: 17px; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .chapter-story-stage, .sunset-stage, .nerves-stage, .confession-poem-stage, .night-stage, .afterglow-stage { transform: scale(.92); }
+  .confession-poem-lines p { margin-bottom: 4px; }
+  .chapter-story-stage .chapter-overline, .sunset-stage .chapter-overline,
+  .nerves-stage .chapter-overline, .confession-poem-stage .chapter-overline,
+  .night-stage .chapter-overline, .afterglow-stage .chapter-overline { margin-bottom: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-cancelled, .scene-arrival, .scene-sunset, .scene-nerves,
+  .scene-confession-poem, .scene-reply-wait, .scene-night, .scene-yes,
+  .scene-afterglow, .sunset-horizon, .nerves-pulse, .night-glimmer,
+  .yes-word, .yes-rule, .night-glyph.is-visible { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+
+/* November 28 — two real photographs make a prominent entrance, then settle
+   together above the continuous 70ms typewriter narration. */
+.scene-first-selfies.is-active { animation: chapter-scene-in 950ms ease both; }
+.first-selfies-stage {
+  width: min(1120px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.45vh, 17px);
+}
+.first-selfies-date {
+  margin: 0;
+  color: #b99fbe;
+  text-align: center;
+}
+.first-selfies-gallery {
+  width: min(1080px, 100%);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  gap: clamp(14px, 2.1vw, 30px);
+  transform: translate3d(0, 0, 0) scale(1.22);
+  transform-origin: center center;
+  will-change: transform;
+}
+.first-selfie {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: 0;
+  filter: blur(2.5px);
+  transform: scale(.76);
+  transform-origin: center center;
+  will-change: opacity, filter, transform;
+}
+.first-selfie img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 43svh;
+  object-fit: contain;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 20px 56px #0008;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.first-selfies-copy {
+  width: min(940px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(5px, .75vh, 9px);
+  flex: 0 0 auto;
+  text-align: center;
+  overflow: visible;
+  margin-top: 0;
+}
+.first-selfies-copy p {
+  width: 100%;
+  margin: 0;
+  color: #d4c9d8;
+  font: 400 clamp(13px, 1.35vw, 17px)/1.42 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.first-selfies-copy p:last-child { color: #eee3ee; }
+.first-selfie-word { display: inline-block; white-space: nowrap; }
+.first-selfie-glyph {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(2px);
+  transform: translateY(1px);
+}
+.first-selfie-glyph.is-visible {
+  animation: first-selfie-glyph-in 120ms ease-out forwards;
+}
+@keyframes first-selfie-glyph-in {
+  from { opacity: 0; filter: blur(2px); transform: translateY(1px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+
+@media (max-width: 650px) {
+  .first-selfies-stage { gap: 8px; }
+  .first-selfies-gallery {
+    width: min(82vw, 420px);
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .first-selfie img {
+    width: min(78vw, 380px);
+    max-height: 22svh;
+  }
+  .first-selfies-copy {
+    width: min(560px, 100%);
+    gap: 4px;
+  }
+  .first-selfies-copy p {
+    font-size: clamp(11.5px, 3vw, 13px);
+    line-height: 1.31;
+  }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .first-selfies-stage { gap: 5px; }
+  .first-selfies-gallery { gap: 3px; }
+  .first-selfie img { max-height: 19svh; }
+  .first-selfies-copy { gap: 3px; }
+  .first-selfies-copy p { font-size: 11px; line-height: 1.26; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .first-selfies-stage { gap: 8px; }
+  .first-selfie img { max-height: 43svh; }
+  .first-selfies-copy p { font-size: 13px; line-height: 1.34; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-first-selfies { animation-duration: .01ms !important; }
+  .first-selfie-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Personal photograph memory — same entrance, scale-down settle and typewriter language. */
+.scene-profile-memory.is-active { animation: chapter-scene-in 950ms ease both; }
+.profile-memory-stage {
+  width: min(1040px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vh, 15px);
+  text-align: center;
+}
+.profile-memory-kicker { margin: 0 0 2px; color: #b99fbe; opacity: .92; }
+.profile-memory-photo-wrap {
+  width: min(42vw, 390px);
+  height: min(43svh, 420px);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  opacity: 0;
+  filter: blur(2.5px);
+  transform: translateY(0) scale(.78);
+  transform-origin: center center;
+  will-change: opacity, filter, transform;
+}
+.profile-memory-photo {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+  box-shadow: 0 20px 56px #0008;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.profile-memory-copy {
+  width: min(850px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(5px, .7vh, 9px);
+  text-align: center;
+}
+.profile-memory-copy p {
+  width: 100%;
+  margin: 0;
+  color: #d4c9d8;
+  font: 400 clamp(13px, 1.32vw, 17px)/1.42 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.profile-memory-copy p:last-child { color: #eee3ee; }
+.profile-memory-word { display: inline-block; white-space: nowrap; }
+.profile-memory-glyph {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(2px);
+  transform: translateY(1px);
+}
+.profile-memory-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+@media (max-width: 650px) {
+  .profile-memory-stage { gap: 7px; }
+  .profile-memory-photo-wrap { width: min(65vw, 320px); height: min(34svh, 285px); }
+  .profile-memory-copy { width: min(560px, 100%); gap: 4px; }
+  .profile-memory-copy p { font-size: clamp(11.5px, 3vw, 13px); line-height: 1.31; }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .profile-memory-stage { gap: 5px; }
+  .profile-memory-photo-wrap { height: min(29svh, 240px); }
+  .profile-memory-copy { gap: 3px; }
+  .profile-memory-copy p { font-size: 11px; line-height: 1.26; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .profile-memory-stage { gap: 7px; }
+  .profile-memory-photo-wrap { height: min(38svh, 290px); }
+  .profile-memory-copy p { font-size: 13px; line-height: 1.34; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-profile-memory { animation-duration: .01ms !important; }
+  .profile-memory-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Additional photographic memories, arranged in the approved story order. */
+.story-memory.is-active { animation: chapter-scene-in 950ms ease both; }
+.story-memory-stage {
+  width: min(1120px, 100%); max-height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: clamp(9px, 1.15vh, 14px); text-align: center;
+}
+.story-memory-kicker { margin: 0; color: #b99fbe; opacity: .94; }
+.story-memory-gallery {
+  width: min(1080px, 100%); display: grid; align-items: center; justify-items: center;
+  gap: clamp(12px, 2vw, 26px); transform: translate3d(0,0,0) scale(1.18);
+  transform-origin: center center; will-change: transform;
+}
+.story-memory-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Single-photo memories reuse the established single-portrait footprint. */
+.story-memory-single { width: min(42vw, 390px); }
+.story-memory-single .story-memory-photo { height: min(43svh, 420px); }
+.story-memory-photo {
+  width: 100%; min-width: 0; height: min(39svh, 390px); margin: 0; padding: 0;
+  display: flex; align-items: center; justify-content: center; opacity: 0; filter: blur(2.5px);
+  transform: scale(.76); transform-origin: center center; will-change: opacity, filter, transform;
+}
+.story-memory-photo img {
+  display: block; width: 100%; height: 100%; max-width: 100%; max-height: 100%;
+  object-fit: contain; border: 0; border-radius: 2px; box-shadow: 0 20px 56px #0008;
+  user-select: none; -webkit-user-drag: none;
+}
+.story-memory-copy {
+  width: min(940px, 100%); display: flex; flex-direction: column; align-items: center;
+  gap: clamp(4px, .65vh, 8px); text-align: center; overflow: visible;
+}
+.story-memory-copy p {
+  width: 100%; margin: 0; color: #d4c9d8;
+  font: 400 clamp(12.5px, 1.27vw, 16.5px)/1.36 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.story-memory-copy p:last-child { color: #eee3ee; }
+.story-memory-glyph { display: inline-block; opacity: 0; filter: blur(2px); transform: translateY(1px); }
+.story-memory-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+
+/* Five individual portraits: each gets a large, centred moment, then settles
+   into a compact, equal-weight collection before the narration begins. */
+.story-memory-collection {
+  width: min(1120px, 100%); grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(8px, 1.1vw, 15px); transform: none;
+}
+.story-memory-collection .story-memory-photo {
+  height: min(23svh, 220px); transform: none; opacity: 0; filter: blur(2.5px);
+}
+.story-memory-collection .story-memory-photo img { max-height: 100%; }
+.story-memory-collection-copy { width: min(950px, 100%); }
+
+@media (max-width: 650px) {
+  .story-memory-stage { gap: 7px; }
+  .story-memory-gallery { width: min(90vw, 440px); gap: 5px; }
+  .story-memory-pair { grid-template-columns: 1fr; }
+  .story-memory-photo { height: min(20svh, 155px); }
+  .story-memory-single { width: min(65vw, 320px); }
+  .story-memory-single .story-memory-photo { height: min(34svh, 285px); }
+  .story-memory-copy { width: min(560px, 100%); gap: 3px; }
+  .story-memory-copy p { font-size: clamp(11px, 2.85vw, 12.5px); line-height: 1.27; }
+  .story-memory-collection { width: min(92vw, 460px); grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px 7px; }
+  .story-memory-collection .story-memory-photo { height: min(11.8svh, 88px); }
+  .story-memory-collection-copy { width: min(560px, 100%); }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .story-memory-stage { gap: 4px; }
+  .story-memory-photo { height: min(17svh, 125px); }
+  .story-memory-single .story-memory-photo { height: min(29svh, 240px); }
+  .story-memory-copy p { font-size: 10.5px; line-height: 1.22; }
+  .story-memory-collection .story-memory-photo { height: min(10svh, 74px); }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .story-memory-photo { height: min(32svh, 300px); }
+  .story-memory-single .story-memory-photo { height: min(38svh, 290px); }
+  .story-memory-copy p { font-size: 12px; line-height: 1.28; }
+  .story-memory-collection .story-memory-photo { height: min(19svh, 170px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-memory.is-active, .story-memory-glyph.is-visible { animation-duration: .01ms !important; }
+}
+.story-memory-word { display: inline-block; white-space: nowrap; }
+
+
+/* Scene 25 — academic separation, expressed as one continuous cinematic sequence. */
+.scene-separation.is-active { animation: chapter-scene-in 950ms ease both; }
+.separation-stage {
+  width: min(1040px, 100%); max-height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: clamp(7px, 1.05vh, 13px); text-align: center;
+}
+.separation-heading { width: 100%; text-align: center; }
+.separation-kicker {
+  margin-bottom: clamp(7px, 1vh, 12px); opacity: 1; transform: none; filter: none;
+}
+.separation-title {
+  max-width: 900px; margin: 0 auto; color: #f1e9f2;
+  font: 400 clamp(29px, 3.65vw, 46px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.04em; text-wrap: balance; opacity: 1; transform: none;
+  transform-origin: center; filter: none;
+}
+.separation-choices {
+  width: min(590px, 90%); display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: clamp(24px, 6vw, 72px); margin: 2px 0 0;
+}
+.separation-choice {
+  display: flex; flex-direction: column; align-items: center; gap: 3px; opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(.72); transform-origin: center;
+  will-change: opacity, transform, filter;
+}
+.separation-choice-label { color: #aa98b2; font-size: 8px; letter-spacing: .26em; text-indent: .26em; }
+.separation-choice strong {
+  color: #e4d5e9; font: 400 clamp(22px, 2.25vw, 28px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: .035em;
+}
+.separation-choice-mine strong { color: #d4c4e8; }
+.separation-choice small { color: #a89bad; font-size: 8px; letter-spacing: .2em; }
+.separation-copy { width: min(820px, 96%); display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; }
+.separation-copy p {
+  width: 100%; margin: 0; color: #d4c9d8;
+  font: 400 clamp(14px, 1.22vw, 16px)/1.44 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty; white-space: normal;
+}
+.separation-copy p:last-child { color: #eee3ee; }
+.separation-glyph { opacity: 0; }
+.separation-glyph.is-visible { opacity: 1; }
+
+@media (max-width: 650px) {
+  .separation-stage { gap: 6px; }
+  .separation-kicker { margin-bottom: 5px; }
+  .separation-title { max-width: 500px; font-size: clamp(25px, 6.2vw, 33px); line-height: 1.12; }
+  .separation-choices { width: min(420px, 96%); gap: 18px; }
+  .separation-choice-label { font-size: 7px; }
+  .separation-choice strong { font-size: 20px; }
+  .separation-choice small { font-size: 7px; }
+  .separation-copy { width: min(580px, 96%); gap: 6px; }
+  .separation-copy p { font-size: clamp(12.5px, 3.1vw, 14px); line-height: 1.36; }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .separation-stage { gap: 4px; }
+  .separation-copy p { font-size: 11.5px; line-height: 1.3; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .separation-copy p { font-size: 12.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-separation { animation-duration: .01ms !important; }
+}
+
+/* Scene 25 — separation without the map. */
+.scene-separation.is-active { animation: chapter-scene-in 950ms ease both; }
+.separation-stage {
+  width: min(1040px, 100%); max-height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: clamp(12px, 2.2vh, 24px); text-align: center;
+}
+.separation-choices { margin-top: clamp(8px, 1.2vh, 14px); }
+.separation-copy { margin-top: clamp(10px, 1.3vh, 16px); }
+.separation-copy p { font-size: clamp(14px, 1.32vw, 17px); line-height: 1.48; }
+@media (max-width: 650px) {
+  .separation-stage { gap: 14px; }
+  .separation-copy { width: min(580px, 96%); gap: 9px; }
+  .separation-copy p { font-size: clamp(13px, 3.15vw, 14.5px); line-height: 1.4; }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .separation-stage { gap: 8px; }
+  .separation-copy p { font-size: 12px; line-height: 1.32; }
+}
+
+/* Scene 26 — A Little Hope: two beats under one stationary chapter title. */
+.scene-hope-journey.is-active { animation: chapter-scene-in 950ms ease both; }
+.hope-stage {
+  position: relative; width: min(1050px, 100%); height: min(88svh, 820px); max-height: 100%;
+  display: block; text-align: center;
+}
+.hope-heading { position: absolute; top: clamp(7px, 1.4vh, 14px); left: 0; right: 0; width: 100%; }
+.hope-title {
+  margin: 0; color: #f1e9f2; font: 400 clamp(30px, 3.7vw, 46px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.035em; opacity: 1; transform: none; filter: none;
+}
+.hope-intro-block {
+  position: absolute; top: clamp(72px, 11vh, 105px); left: 0; right: 0; margin: 0 auto;
+  width: min(850px, 96%); display: flex; flex-direction: column; align-items: center;
+  gap: clamp(12px, 2vh, 22px); transition: none; will-change: opacity, transform;
+}
+.hope-intro-copy, .hope-journey-line {
+  width: 100%; margin: 0; color: #ddd2e0;
+  font: 400 clamp(15px, 1.55vw, 19px)/1.55 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: center; text-wrap: pretty;
+}
+.hope-english-title {
+  margin: 0; color: #f1d9ed; font: 600 clamp(28px, 4.5vw, 54px)/1.08 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: .075em; text-indent: .075em; text-shadow: 0 0 24px #d59fd455, 0 0 52px #a77bc533;
+  opacity: 0; transform: translate3d(0, 18px, 0) scale(.82); filter: blur(3px); will-change: opacity, transform, filter;
+}
+.hope-journey-block {
+  position: absolute; top: clamp(72px, 11vh, 105px); left: 0; right: 0; width: 100%; max-height: calc(100% - clamp(72px, 11vh, 105px));
+  display: flex; visibility: visible; flex-direction: column; align-items: center; justify-content: flex-start;
+  gap: clamp(22px, 4.2vh, 32px); min-height: 0; overflow: hidden;
+}
+.hope-journey-line {
+  max-width: 900px; color: #f0e7f2; font-size: clamp(17px, 1.9vw, 23px); line-height: 1.36;
+}
+.hope-map-shell { width: min(900px, 100%); display: flex; justify-content: center; align-items: center; flex: 0 0 auto; }
+.hope-map-frame {
+  position: relative; width: 96%; max-width: 850px; aspect-ratio: 1535 / 1024; overflow: hidden;
+  border: 1px solid #c5a8d355; border-radius: 11px; background: #100d17;
+  box-shadow: 0 22px 65px #0009, 0 0 36px #bd91d52a;
+  opacity: 0; transform: translate3d(0, 28px, 0) scale(.76); transform-origin: center;
+  will-change: opacity, transform, filter, width;
+}
+.hope-map-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+.hope-map-vignette { position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(145deg, #140d1c10, transparent 35%, #08060c1a 100%), radial-gradient(ellipse at 50% 50%, transparent 46%, #08060c20 100%); box-shadow: inset 0 0 30px #08060c44; }
+.hope-route-overlay { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.hope-route-cover { fill: none; stroke: #17101d; stroke-width: 22; stroke-linecap: round; stroke-linejoin: round; opacity: .99; }
+.hope-route-glow { fill: none; stroke: #c9a5ef; stroke-width: 19; stroke-linecap: round; stroke-linejoin: round; opacity: .96; filter: blur(5px); }
+.hope-route-core { fill: none; stroke: #f5e8ff; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; opacity: .99; filter: drop-shadow(0 0 8px #d7a8fb); }
+.hope-route-runner { fill: #fff8ff; stroke: #d7a8fb; stroke-width: 7; opacity: 0; filter: drop-shadow(0 0 15px #e8c8ff); }
+.hope-waypoints circle { fill: #fff3ff; stroke: #dcaeff; stroke-width: 3; filter: drop-shadow(0 0 9px #d7a8fb); }
+.hope-copy { width: min(930px, 98%); display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; }
+.hope-copy p {
+  width: 100%; margin: 0; color: #d8cedb; font: 400 clamp(14.5px, 1.25vw, 16.5px)/1.4 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.hope-copy p:last-child { color: #eee3ee; }
+.hope-glyph { opacity: 0; }
+.hope-glyph.is-visible { opacity: 1; }
+@media (max-width: 650px) {
+  .hope-stage { height: min(90svh, 820px); }
+  .hope-title { font-size: clamp(27px, 7vw, 36px); }
+  .hope-intro-block { top: clamp(68px, 11vh, 92px); width: 98%; gap: 15px; }
+  .hope-intro-copy { font-size: clamp(14px, 3.6vw, 16px); line-height: 1.43; }
+  .hope-english-title { font-size: clamp(27px, 7vw, 38px); }
+  .hope-journey-block { top: clamp(68px, 11vh, 92px); max-height: calc(100% - clamp(68px, 11vh, 92px)); gap: clamp(18px, 2.5vh, 22px); }
+  .hope-journey-line { font-size: clamp(15px, 4vw, 18px); }
+  .hope-map-shell { width: 100%; }
+  .hope-copy { width: 100%; gap: 4px; }
+  .hope-copy p { font-size: clamp(13px, 3.3vw, 14px); line-height: 1.32; }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .hope-stage { gap: 5px; }
+  .hope-copy p { font-size: 11.5px; line-height: 1.25; }
+  .hope-map-frame { border-radius: 7px; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .hope-copy p { font-size: 13px; line-height: 1.34; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-hope-journey { animation-duration: .01ms !important; }
+}
+
+/* Split Hope into two independently navigable scenes. */
+.scene-hope-intro.is-active, .scene-hope-journey.is-active { animation: chapter-scene-in 950ms ease both; }
+.hope-journey-heading { position: absolute; top: clamp(4px, 1vh, 10px); left: 0; right: 0; width: 100%; text-align: center; z-index: 3; }
+.hope-journey-kicker { margin: 0 0 clamp(10px, 1.5vh, 16px); }
+.hope-journey-title { margin: 0 auto; max-width: 1000px; color: #f1e9f2; font: 400 clamp(25px, 3.1vw, 40px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.035em; text-wrap: balance; }
+.hope-journey-block { top: clamp(96px, 14.5vh, 124px); max-height: calc(100% - clamp(96px, 14.5vh, 124px)); gap: clamp(9px, 1.5vh, 13px); }
+.hope-map-shell { width: min(850px, 100%); }
+.hope-copy { width: min(900px, 98%); }
+@media (max-width: 650px) {
+  .hope-journey-heading { top: 3px; }
+  .hope-journey-kicker { margin-bottom: 8px; }
+  .hope-journey-title { max-width: 96%; font-size: clamp(22px, 5.8vw, 30px); line-height: 1.12; }
+  .hope-journey-block { top: clamp(96px, 15vh, 120px); max-height: calc(100% - clamp(96px, 15vh, 120px)); gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .scene-hope-intro, .scene-hope-journey { animation-duration: .01ms !important; } }
+
+
+/* Scene 26 — center the complete A Little Hope composition in the viewport. */
+.scene-hope-intro .hope-intro-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2.5vh, 26px);
+  height: min(88svh, 820px);
+  text-align: center;
+}
+.scene-hope-intro .hope-heading {
+  position: static;
+  inset: auto;
+  width: 100%;
+  flex: 0 0 auto;
+}
+.scene-hope-intro .hope-intro-block {
+  position: static;
+  inset: auto;
+  width: min(850px, 96%);
+  margin: 0 auto;
+  flex: 0 0 auto;
+}
+@media (max-width: 650px) {
+  .scene-hope-intro .hope-intro-stage {
+    width: 100%;
+    height: min(88svh, 820px);
+    gap: clamp(15px, 2.4vh, 22px);
+  }
+  .scene-hope-intro .hope-intro-block { width: 98%; gap: 15px; }
+}
+@media (max-height: 600px) {
+  .scene-hope-intro .hope-intro-stage { height: 88svh; gap: 12px; }
+  .scene-hope-intro .hope-intro-block { gap: 10px; }
+}
+
+/* System-level reduced motion: remove decorative movement and transition
+   delays throughout the page. Story timing remains available to the reader. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+
+
+/* Scene 33 — the two new academic beginnings after HS. The title stays still;
+   the original institute photographs reveal one at a time in the same photo style. */
+.scene-new-beginnings.is-active { animation: chapter-scene-in 950ms ease both; }
+.new-beginnings-stage {
+  width: min(1120px, 100%); height: 100%; max-height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(7px, 1.15vh, 13px); text-align: center;
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch; padding: 7px 5px 12px;
+}
+.new-beginnings-stage::-webkit-scrollbar { display: none; }
+.new-beginnings-heading { width: 100%; flex: 0 0 auto; }
+.new-beginnings-title {
+  max-width: 1000px; margin: 0 auto; color: #f1e9f2;
+  font: 400 clamp(28px, 3.55vw, 45px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.04em; text-wrap: balance;
+  opacity: 1; transform: none; filter: none;
+}
+.new-beginnings-gallery {
+  width: min(1020px, 100%); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start; gap: clamp(12px, 2.4vw, 30px); flex: 0 0 auto;
+}
+.new-beginnings-card { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.new-beginnings-photo {
+  width: 100%; height: min(25svh, 248px); min-height: 0; margin: 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; filter: blur(2.5px); transform: scale(.76);
+  transform-origin: center center; will-change: opacity, filter, transform;
+}
+.new-beginnings-photo img {
+  display: block; width: 100%; height: 100%; max-width: 100%; max-height: 100%;
+  object-fit: contain; border: 0; border-radius: 2px;
+  box-shadow: 0 20px 56px #0008; user-select: none; -webkit-user-drag: none;
+}
+.new-beginnings-details {
+  width: 100%; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; opacity: 0; transform: translateY(5px); filter: blur(2px);
+  transition: opacity 420ms ease, transform 420ms ease, filter 420ms ease;
+}
+.new-beginnings-details.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+.new-beginnings-institute {
+  margin: 0; color: #f0e7f2;
+  font: 400 clamp(15px, 1.55vw, 19px)/1.2 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: balance;
+}
+.new-beginnings-place {
+  margin: 0; color: #bbaabd; font: 400 clamp(11px, 1vw, 13px)/1.25 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .07em;
+}
+.new-beginnings-caption {
+  margin: 5px 0 0; color: #e4d3e8;
+  font: 400 clamp(18px, 2vw, 25px)/1.14 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.015em; opacity: 0; transform: translateY(4px);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+.new-beginnings-caption.is-visible { opacity: 1; transform: translateY(0); }
+.new-beginnings-copy {
+  width: min(960px, 100%); display: flex; flex-direction: column; align-items: center;
+  gap: clamp(4px, .65vh, 8px); text-align: center; flex: 0 0 auto;
+}
+.new-beginnings-copy p {
+  width: 100%; margin: 0; color: #d4c9d8;
+  font: 400 clamp(12.5px, 1.18vw, 15.5px)/1.35 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.new-beginnings-copy p:last-child { color: #eee3ee; }
+.new-beginnings-glyph {
+  display: inline-block; opacity: 0; filter: blur(2px); transform: translateY(1px);
+}
+.new-beginnings-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+.new-beginnings-word { display: inline-block; white-space: nowrap; }
+
+@media (max-width: 650px) {
+  .new-beginnings-stage { justify-content: flex-start; gap: 7px; padding-top: 4px; }
+  .new-beginnings-title { font-size: clamp(24px, 5.7vw, 32px); line-height: 1.12; }
+  .new-beginnings-gallery { width: 100%; gap: 9px; }
+  .new-beginnings-card { gap: 4px; }
+  .new-beginnings-photo { height: min(22svh, 170px); }
+  .new-beginnings-institute { font-size: clamp(12px, 3.15vw, 15px); line-height: 1.16; }
+  .new-beginnings-place { font-size: 10px; }
+  .new-beginnings-caption { margin-top: 3px; font-size: clamp(15px, 4vw, 19px); }
+  .new-beginnings-copy { width: min(570px, 100%); gap: 4px; }
+  .new-beginnings-copy p { font-size: clamp(11.5px, 2.85vw, 13px); line-height: 1.27; }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .new-beginnings-stage { gap: 4px; }
+  .new-beginnings-title { font-size: 23px; }
+  .new-beginnings-photo { height: min(18svh, 125px); }
+  .new-beginnings-copy p { font-size: 10.8px; line-height: 1.22; }
+  .new-beginnings-caption { font-size: 15px; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .new-beginnings-stage { gap: 6px; }
+  .new-beginnings-photo { height: min(20svh, 175px); }
+  .new-beginnings-title { font-size: 30px; }
+  .new-beginnings-copy p { font-size: 12px; line-height: 1.28; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-new-beginnings.is-active { animation-duration: .01ms !important; }
+  .new-beginnings-details, .new-beginnings-caption { transition: none !important; }
+  .new-beginnings-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Scene 34 — the real WhatsApp conversation. The title stays still; the intro
+   appears first, then the video and independent typewriter narration begin together. */
+.scene-whatsapp-memory.is-active { animation: chapter-scene-in 950ms ease both; }
+.whatsapp-memory-stage {
+  width: min(980px, 100%); height: 100%; max-height: 100%;
+  margin: 0 auto; padding: 10px 12px 18px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  gap: clamp(9px, 1.3vh, 15px); text-align: center;
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.whatsapp-memory-stage::-webkit-scrollbar { display: none; }
+.whatsapp-memory-heading { width: 100%; flex: 0 0 auto; }
+.whatsapp-memory-title {
+  max-width: 900px; margin: 0 auto; color: #f1e9f2;
+  font: 400 clamp(28px, 3.55vw, 45px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.04em; text-wrap: balance;
+}
+.whatsapp-memory-intro {
+  width: min(760px, 100%); margin: 0 auto; color: #d9cbdc;
+  font: 400 clamp(14px, 1.35vw, 17px)/1.4 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  opacity: 0; transform: translateY(5px); filter: blur(2px);
+  transition: opacity 420ms ease, transform 420ms ease, filter 420ms ease;
+}
+.whatsapp-memory-intro.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+.whatsapp-video-shell {
+  width: min(360px, 84vw); height: min(43svh, 520px); flex: 0 0 auto;
+  display: flex; justify-content: center; align-items: center;
+  opacity: 0; transform: translateY(7px); filter: blur(2px); pointer-events: none;
+  transition: opacity 440ms ease, transform 440ms ease, filter 440ms ease;
+}
+.whatsapp-video-shell.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); pointer-events: auto; }
+.whatsapp-memory-video {
+  display: block; width: auto; height: 100%; max-width: 100%; max-height: 100%;
+  aspect-ratio: 430 / 850; object-fit: contain; background: #100e12;
+  border: 1px solid rgba(220, 199, 220, .32); border-radius: 8px;
+  box-shadow: 0 18px 48px rgba(0,0,0,.42);
+}
+.whatsapp-memory-copy {
+  width: min(900px, 100%); display: flex; flex-direction: column;
+  align-items: center; gap: clamp(5px, .75vh, 9px); text-align: center;
+  flex: 0 0 auto;
+}
+.whatsapp-memory-copy p {
+  width: 100%; margin: 0; color: #d4c9d8;
+  font: 400 clamp(13px, 1.18vw, 15.5px)/1.38 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.whatsapp-memory-copy p:last-child { color: #eee3ee; }
+.whatsapp-memory-glyph { display: inline-block; opacity: 0; filter: blur(1.5px); transform: translateY(1px); }
+.whatsapp-memory-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+.whatsapp-memory-word { display: inline-block; white-space: nowrap; }
+@media (max-width: 650px) {
+  .whatsapp-memory-stage { padding: 7px 10px 18px; gap: 10px; }
+  .whatsapp-memory-title { font-size: clamp(24px, 5.7vw, 32px); line-height: 1.12; }
+  .whatsapp-memory-intro { font-size: clamp(12.5px, 3vw, 14px); line-height: 1.34; }
+  .whatsapp-video-shell { width: min(300px, 78vw); height: min(39svh, 360px); }
+  .whatsapp-memory-copy { width: min(570px, 100%); gap: 5px; }
+  .whatsapp-memory-copy p { font-size: clamp(11.5px, 2.85vw, 13px); line-height: 1.28; }
+}
+@media (max-height: 700px) and (max-width: 650px) {
+  .whatsapp-memory-stage { gap: 6px; }
+  .whatsapp-memory-video { max-height: 32svh; }
+  .whatsapp-memory-copy p { font-size: 10.8px; line-height: 1.23; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .whatsapp-memory-stage { gap: 7px; }
+  .whatsapp-video-shell { height: min(34svh, 330px); }
+  .whatsapp-memory-title { font-size: 30px; }
+  .whatsapp-memory-copy p { font-size: 12px; line-height: 1.28; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-whatsapp-memory.is-active { animation-duration: .01ms !important; }
+  .whatsapp-memory-intro, .whatsapp-video-shell { transition: none !important; }
+  .whatsapp-memory-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Scene 35 — compact landscape video and balanced story layout. */
+.scene-whatsapp-calls.is-active { animation: chapter-scene-in 950ms ease both; }
+.whatsapp-calls-stage {
+  width: min(1080px, 100%); height: 100%; max-height: 100%; margin: 0 auto;
+  padding: 14px 18px 20px; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: clamp(9px, 1.25vh, 14px); text-align: center;
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.whatsapp-calls-stage::-webkit-scrollbar { display: none; }
+.whatsapp-calls-heading { width: 100%; flex: 0 0 auto; }
+.whatsapp-calls-title { max-width: 900px; margin: 0 auto; color: #f1e9f2; font: 400 clamp(30px, 3.25vw, 43px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.04em; text-wrap: balance; }
+.whatsapp-calls-intro { width: min(760px, 100%); margin: 0 auto; color: #d9cbdc; font: 400 clamp(14px, 1.3vw, 16.5px)/1.38 "Iowan Old Style", "Palatino Linotype", Georgia, serif; opacity: 0; transform: translateY(5px); filter: blur(2px); transition: opacity 420ms ease, transform 420ms ease, filter 420ms ease; }
+.whatsapp-calls-intro.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+.whatsapp-calls-video-shell { width: min(340px, 78vw); aspect-ratio: 16 / 9; height: auto; flex: 0 0 auto; display: flex; justify-content: center; align-items: center; opacity: 0; transform: translateY(7px); filter: blur(2px); pointer-events: none; transition: opacity 440ms ease, transform 440ms ease, filter 440ms ease; }
+.whatsapp-calls-video-shell.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); pointer-events: auto; }
+.whatsapp-calls-video { display: block; width: 100%; height: 100%; max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #08070a; border: 0; border-radius: 3px; box-shadow: 0 8px 24px rgba(0,0,0,.28); }
+.whatsapp-calls-copy { width: min(900px, 100%); display: flex; flex-direction: column; align-items: center; gap: clamp(6px,.8vh,10px); text-align: center; flex: 0 0 auto; }
+.whatsapp-calls-copy p { width: 100%; margin: 0; color: #d4c9d8; font: 400 clamp(13px,1.12vw,15px)/1.4 "Iowan Old Style", "Palatino Linotype", Georgia, serif; text-wrap: pretty; }
+.whatsapp-calls-copy p:last-child { color: #eee3ee; }
+.whatsapp-calls-glyph { display: inline-block; opacity: 0; filter: blur(1.5px); transform: translateY(1px); }
+.whatsapp-calls-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+.whatsapp-calls-word { display: inline-block; white-space: nowrap; }
+@media (max-width:650px) {
+  .whatsapp-calls-stage { padding:10px 14px 20px; gap:10px; justify-content:center; }
+  .whatsapp-calls-title { font-size:clamp(25px,6vw,33px); line-height:1.1; }
+  .whatsapp-calls-intro { font-size:clamp(12.5px,3.2vw,14px); line-height:1.34; }
+  .whatsapp-calls-video-shell { width:min(320px,86vw); }
+  .whatsapp-calls-copy { width:min(620px,100%); gap:6px; }
+  .whatsapp-calls-copy p { font-size:clamp(11.5px,2.9vw,13px); line-height:1.3; }
+}
+@media (max-height:700px) {
+  .whatsapp-calls-stage { gap:8px; padding-top:8px; padding-bottom:12px; }
+  .whatsapp-calls-title { font-size:clamp(27px,3vw,39px); }
+  .whatsapp-calls-video-shell { width:min(310px,70vw); }
+  .whatsapp-calls-copy p { line-height:1.32; }
+}
+@media (prefers-reduced-motion:reduce) { .scene-whatsapp-calls.is-active { animation-duration:.01ms !important; } .whatsapp-calls-intro,.whatsapp-calls-video-shell { transition:none !important; } .whatsapp-calls-glyph.is-visible { animation-duration:.01ms !important; } }
+
+
+/* Scene 36 — the photographs she shared, shown one at a time before settling into a keepsake collection. */
+.scene-picture-keepsakes.is-active { animation: chapter-scene-in 950ms ease both; }
+.picture-keepsakes-stage { width: min(1120px, 100%); }
+.picture-keepsakes-gallery { width: min(1080px, 100%); }
+.picture-keepsakes-copy { width: min(950px, 100%); }
+.picture-keepsakes-copy p { font-size: clamp(12.5px, 1.24vw, 16px); line-height: 1.36; }
+@media (max-width:650px) {
+  .picture-keepsakes-stage { gap:7px; }
+  .picture-keepsakes-gallery { width:min(92vw,460px); }
+  .picture-keepsakes-copy { width:min(560px,100%); gap:5px; }
+  .picture-keepsakes-copy p { font-size:clamp(11px,2.85vw,12.5px); line-height:1.27; }
+}
+@media (max-height:700px) and (max-width:650px) {
+  .picture-keepsakes-stage { gap:4px; }
+  .picture-keepsakes-copy p { font-size:10.5px; line-height:1.22; }
+}
+@media (max-height:680px) and (min-width:651px) {
+  .picture-keepsakes-copy p { font-size:12px; line-height:1.28; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .scene-picture-keepsakes.is-active { animation-duration:.01ms !important; }
+  .picture-keepsakes-copy .story-memory-glyph.is-visible { animation-duration:.01ms !important; }
+}
+
+
+/* Scene 37 — a quiet, text-only memory of passing her home. */
+.scene-just-a-glimpse { animation: none !important; }
+.just-a-glimpse-stage { width: min(780px, calc(100% - 48px)); margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: clamp(24px, 4vh, 42px); text-align: center; }
+.just-a-glimpse-title { margin: 0; color: #f1e9f2; font: 400 clamp(30px, 3.25vw, 43px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.04em; text-wrap: balance; }
+.just-a-glimpse-copy { width: 100%; display: flex; flex-direction: column; gap: clamp(15px, 2.1vh, 22px); }
+.just-a-glimpse-copy p { margin: 0; color: #dcd1df; font: 400 clamp(15px, 1.28vw, 17px)/1.65 "Iowan Old Style", "Palatino Linotype", Georgia, serif; text-wrap: pretty; }
+.just-a-glimpse-copy p:last-child { color: #f0e6f0; }
+.just-a-glimpse-glyph { display: inline; opacity: 0; }
+.just-a-glimpse-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+@media (max-width:650px) {
+  .just-a-glimpse-stage { width: calc(100% - 38px); gap: 25px; }
+  .just-a-glimpse-title { font-size: clamp(27px, 7vw, 35px); }
+  .just-a-glimpse-copy { gap: 15px; }
+  .just-a-glimpse-copy p { font-size: clamp(14px, 3.7vw, 16px); line-height: 1.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .just-a-glimpse-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Scenes 38–39 — text-only chapter transitions; stationary titles and typewritten narration. */
+.chapter-text-scene { animation: none !important; }
+.chapter-text-stage { width: min(800px, calc(100% - 48px)); margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: clamp(22px, 3.6vh, 36px); text-align: center; }
+.chapter-text-title { margin: 0; color: #f1e9f2; font: 400 clamp(30px, 3.25vw, 43px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.04em; text-wrap: balance; }
+.chapter-text-copy { width: 100%; display: flex; flex-direction: column; gap: clamp(13px, 1.8vh, 19px); }
+.chapter-text-copy p { margin: 0; color: #dcd1df; font: 400 clamp(14.5px, 1.2vw, 16.5px)/1.58 "Iowan Old Style", "Palatino Linotype", Georgia, serif; text-wrap: pretty; }
+.chapter-text-glyph { display: inline; opacity: 0; }
+.chapter-text-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+@media (max-width:650px) {
+  .chapter-text-stage { width: calc(100% - 36px); gap: 22px; }
+  .chapter-text-title { font-size: clamp(27px, 7vw, 35px); }
+  .chapter-text-copy { gap: 13px; }
+  .chapter-text-copy p { font-size: clamp(13px, 3.5vw, 14.5px); line-height: 1.48; }
+}
+@media (max-height:680px) {
+  .chapter-text-stage { gap: 17px; }
+  .chapter-text-copy { gap: 10px; }
+  .chapter-text-copy p { font-size: clamp(12.5px, 1.05vw, 15px); line-height: 1.38; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .chapter-text-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Scene 40 — the WhatsApp recording and four photographs share one media row.
+   The narration sits underneath the complete composition. On mobile the same
+   two-column structure is retained, preventing the media from wrapping. */
+.scene-second-drop-connection {
+  animation: none !important;
+  padding-top: max(24px, env(safe-area-inset-top));
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+.second-drop-connection-stage {
+  width: min(1000px, 100%);
+  height: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: 10px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.5vh, 16px);
+  text-align: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.second-drop-connection-stage::-webkit-scrollbar { display: none; }
+.second-drop-connection-heading { width: 100%; flex: 0 0 auto; }
+.second-drop-connection-title {
+  max-width: 900px;
+  margin: 0 auto;
+  color: #f1e9f2;
+  font: 400 clamp(29px, 3.2vw, 42px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+.second-drop-connection-media {
+  width: min(900px, 100%);
+  flex: 0 0 auto;
+  display: grid;
+  --media-height: min(56svh, 440px);
+  grid-template-columns: minmax(0, calc(var(--media-height) * .506)) minmax(0, 1fr);
+  height: var(--media-height);
+  min-height: 0;
+  align-items: stretch;
+  gap: 10px;
+}
+.second-drop-connection-video-shell {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms ease;
+}
+.second-drop-connection-video-shell.is-visible { opacity: 1; pointer-events: auto; }
+.second-drop-connection-video {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 430 / 850;
+  object-fit: contain;
+  background: #09080c;
+  border: 1px solid rgba(220,199,220,.28);
+  border-radius: 7px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.3);
+}
+.second-drop-connection-gallery {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  align-content: stretch;
+}
+.second-drop-connection-photo {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 380ms ease;
+}
+.second-drop-connection-photo.is-visible { opacity: 1; }
+.second-drop-connection-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 4px;
+}
+.second-drop-connection-copy {
+  width: min(900px, 100%);
+  min-width: 0;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(7px, .9vh, 11px);
+  text-align: center;
+}
+.second-drop-connection-copy p {
+  width: 100%;
+  margin: 0;
+  color: #dcd1df;
+  font: 400 clamp(14px, 1.12vw, 15px)/1.42 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: center;
+  text-wrap: pretty;
+}
+.second-drop-connection-copy p:last-child { color: #eee3ee; }
+.second-drop-connection-glyph { display: inline; opacity: 0; }
+.second-drop-connection-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+
+/* Mobile: keep video + 2x2 image group in one non-wrapping row. */
+@media (max-width: 720px) {
+  .scene-second-drop-connection {
+    padding: max(8px, env(safe-area-inset-top)) 7px max(12px, env(safe-area-inset-bottom));
+  }
+  .second-drop-connection-stage {
+    width: 100%;
+    padding: 5px 0 8px;
+    gap: 9px;
+    justify-content: center;
+    padding-top: 5px;
+    overflow-y: auto;
+  }
+  .second-drop-connection-title {
+    font-size: clamp(24px, 6.5vw, 33px);
+    line-height: 1.08;
+  }
+  .second-drop-connection-media {
+    width: 100%;
+    grid-template-columns: minmax(0, .56fr) minmax(0, 1fr);
+    gap: 5px;
+    align-items: stretch;
+  }
+  .second-drop-connection-media { height: auto; }
+  .second-drop-connection-gallery {
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .second-drop-connection-photo { aspect-ratio: 1 / 1; }
+  .second-drop-connection-video-shell {
+    width: 100%;
+    min-width: 0;
+    align-self: stretch;
+  }
+  .second-drop-connection-video {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .second-drop-connection-copy {
+    width: 100%;
+    gap: 7px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .second-drop-connection-copy p {
+    font-size: clamp(12.5px, 3.5vw, 14px);
+    line-height: 1.36;
+    text-align: center;
+  }
+}
+
+/* Very short screens retain a scroll fallback rather than clipping content. */
+@media (max-height: 560px) and (max-width: 720px) {
+  .second-drop-connection-stage { justify-content: flex-start; }
+}
+@media (max-height: 680px) and (min-width: 721px) {
+  .second-drop-connection-stage { gap: 7px; padding-top: 5px; padding-bottom: 7px; }
+  .second-drop-connection-title { font-size: 30px; }
+  .second-drop-connection-photo { aspect-ratio: 1.5 / 1; }
+  .second-drop-connection-copy { gap: 5px; }
+  .second-drop-connection-copy p { font-size: 12.5px; line-height: 1.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .second-drop-connection-video-shell, .second-drop-connection-photo { transition: none !important; }
+  .second-drop-connection-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Scene 41 — January 23, 2026: the first proper date in Tufanganj. */
+.scene-jan23-date { animation: none !important; }
+.jan23-date-stage {
+  width: min(1080px, 100%);
+  max-height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vh, 14px);
+  text-align: center;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.jan23-date-stage::-webkit-scrollbar { display: none; }
+.jan23-date-heading { width: 100%; flex: 0 0 auto; }
+.jan23-date-title {
+  max-width: 1000px;
+  margin: 0 auto;
+  color: #f1e9f2;
+  font: 400 clamp(29px, 3.25vw, 44px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+.jan23-date-kicker {
+  margin: 7px 0 0;
+  color: #b99fbe;
+  font: 500 clamp(10px, .9vw, 12px)/1.3 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: .14em;
+}
+.jan23-date-gallery {
+  width: min(900px, 100%);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  gap: clamp(9px, 1.5vw, 20px);
+}
+.jan23-date-photo {
+  width: 100%;
+  height: min(31svh, 300px);
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  filter: blur(2.5px);
+  transform: translate3d(0, 18px, 0) scale(.72);
+  transform-origin: center center;
+  will-change: opacity, filter, transform;
+}
+.jan23-date-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 3px;
+  box-shadow: 0 16px 42px rgba(0,0,0,.28);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.jan23-date-copy {
+  width: min(950px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, .85vh, 11px);
+  text-align: center;
+}
+.jan23-date-copy p {
+  width: 100%;
+  margin: 0;
+  color: #dcd1df;
+  font: 400 clamp(12.5px, 1.15vw, 15.5px)/1.4 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: center;
+  text-wrap: pretty;
+}
+.jan23-date-copy p:last-child { color: #f0e6f0; }
+.jan23-date-glyph { display: inline; opacity: 0; }
+.jan23-date-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+@media (max-width: 650px) {
+  .scene-jan23-date { padding: max(12px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom)); }
+  .jan23-date-stage { gap: 7px; justify-content: center; }
+  .jan23-date-title { font-size: clamp(25px, 6.7vw, 34px); line-height: 1.08; }
+  .jan23-date-kicker { margin-top: 4px; font-size: 10px; }
+  .jan23-date-gallery { width: 100%; gap: 5px; }
+  .jan23-date-photo { height: min(23svh, 178px); }
+  .jan23-date-copy { gap: 6px; }
+  .jan23-date-copy p { font-size: clamp(11px, 3vw, 13px); line-height: 1.32; }
+}
+@media (max-height: 680px) and (max-width: 650px) {
+  .jan23-date-stage { gap: 5px; }
+  .jan23-date-photo { height: min(19svh, 135px); }
+  .jan23-date-copy p { font-size: 10.5px; line-height: 1.25; }
+}
+@media (max-height: 680px) and (min-width: 651px) {
+  .jan23-date-stage { gap: 6px; }
+  .jan23-date-photo { height: min(27svh, 230px); }
+  .jan23-date-copy { gap: 5px; }
+  .jan23-date-copy p { font-size: 12.5px; line-height: 1.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jan23-date-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Scene 42 — two final photographs frame the muted video. Each photo first
+   appears in the centre, holds, then settles outward to leave the video space. */
+.scene-last-glimpses { animation: none !important; }
+.last-glimpses-stage {
+  width: min(1000px, 100%);
+  max-height: 100%;
+  margin: 0 auto;
+  padding: 10px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.5vh, 17px);
+  text-align: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.last-glimpses-stage::-webkit-scrollbar { display: none; }
+.last-glimpses-heading { width: 100%; flex: 0 0 auto; }
+.last-glimpses-title {
+  max-width: 940px;
+  margin: 0 auto;
+  color: #f1e9f2;
+  font: 400 clamp(29px, 3.25vw, 44px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+.last-glimpses-media {
+  width: min(900px, 100%);
+  height: min(45svh, 390px);
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .82fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(5px, 1vw, 13px);
+  overflow: visible;
+}
+.last-glimpses-photo {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  filter: blur(2.5px);
+  will-change: opacity, filter, transform;
+}
+.last-glimpses-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 4px;
+  box-shadow: 0 16px 42px rgba(0,0,0,.28);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.last-glimpses-video-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms ease;
+}
+.last-glimpses-video-shell.is-visible { opacity: 1; pointer-events: auto; }
+.last-glimpses-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 478 / 850;
+  object-fit: contain;
+  background: #09080c;
+  border: 1px solid rgba(220,199,220,.28);
+  border-radius: 7px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.3);
+}
+.last-glimpses-audio-toggle {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 2;
+  border: 1px solid rgba(239,226,241,.36);
+  border-radius: 999px;
+  padding: 5px 9px;
+  color: #f5edf5;
+  background: rgba(12,9,15,.76);
+  font: 500 10px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.last-glimpses-audio-toggle:focus-visible { outline: 2px solid #d9c0e2; outline-offset: 2px; }
+.last-glimpses-copy {
+  width: min(940px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(7px, .9vh, 11px);
+  text-align: center;
+}
+.last-glimpses-copy p {
+  width: 100%;
+  margin: 0;
+  color: #dcd1df;
+  font: 400 clamp(13px, 1.12vw, 15.5px)/1.42 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: center;
+  text-wrap: pretty;
+}
+.last-glimpses-copy p:last-child { color: #f0e6f0; }
+.last-glimpses-glyph { display: inline; opacity: 0; }
+.last-glimpses-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+@media (max-width: 650px) {
+  .scene-last-glimpses { padding: max(8px, env(safe-area-inset-top)) 9px max(12px, env(safe-area-inset-bottom)); }
+  .last-glimpses-stage { width: 100%; padding: 5px 0 8px; gap: 9px; justify-content: center; }
+  .last-glimpses-title { font-size: clamp(24px, 6.4vw, 33px); line-height: 1.08; }
+  .last-glimpses-media { width: 100%; height: min(35svh, 260px); grid-template-columns: minmax(0, 1fr) minmax(0, .86fr) minmax(0, 1fr); gap: 4px; }
+  .last-glimpses-copy { width: 100%; gap: 7px; }
+  .last-glimpses-copy p { font-size: clamp(12px, 3.3vw, 14px); line-height: 1.36; }
+  .last-glimpses-audio-toggle { top: 5px; right: 5px; padding: 4px 7px; font-size: 9px; }
+}
+@media (max-height: 620px) and (max-width: 650px) {
+  .last-glimpses-stage { gap: 5px; }
+  .last-glimpses-media { height: min(30svh, 185px); }
+  .last-glimpses-copy { gap: 5px; }
+  .last-glimpses-copy p { font-size: 11px; line-height: 1.28; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .last-glimpses-photo, .last-glimpses-video-shell { transition: none !important; }
+  .last-glimpses-glyph.is-visible { animation-duration: .01ms !important; }
+}
+
+
+/* Scenes 43–45: the Holi incident, the days of waiting, and the breakup. */
+.new-memory-stage {
+  width: min(1040px, 100%);
+  height: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: clamp(12px, 2.2vh, 22px) 18px clamp(16px, 2.5vh, 26px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 1.8vh, 20px);
+  text-align: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.new-memory-stage::-webkit-scrollbar { display: none; }
+.new-memory-heading { width: 100%; flex: 0 0 auto; text-align: center; }
+.new-memory-title {
+  max-width: 960px;
+  margin: 0 auto;
+  color: #f1e9f2;
+  font: 400 clamp(28px, 3.25vw, 43px)/1.1 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.new-memory-date {
+  margin: 8px 0 0;
+  color: #c6b4cb;
+  font: 500 10px/1.4 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+.new-memory-copy {
+  width: min(930px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(9px, 1.2vh, 14px);
+  color: #ded3e1;
+  text-align: center;
+}
+.new-memory-copy p {
+  width: 100%;
+  margin: 0;
+  color: #ded3e1;
+  font: 400 clamp(13px, 1.12vw, 15.5px)/1.44 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: center;
+  text-wrap: pretty;
+}
+.new-memory-copy p:last-child { color: #f0e7f1; }
+.new-memory-glyph { display: inline; opacity: 0; }
+.new-memory-glyph.is-visible { animation: first-selfie-glyph-in 120ms ease-out forwards; }
+.scene-holi-reflection .holi-reflection-stage { max-width: 980px; }
+.holi-reflection-copy { margin-top: clamp(4px, 1vh, 10px); }
+.waiting-days-stage { gap: clamp(9px, 1.3vh, 14px); }
+.waiting-days-screenshot-frame {
+  width: min(290px, 72vw);
+  height: min(35svh, 340px);
+  min-height: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  opacity: 0;
+  filter: blur(2.5px);
+  transform: translate3d(0, 18px, 0) scale(.72);
+  transform-origin: center center;
+  will-change: opacity, filter, transform;
+}
+.waiting-days-screenshot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 5px;
+  box-shadow: 0 14px 38px rgba(0,0,0,.3);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.waiting-days-copy { width: min(960px, 100%); }
+.breakup-day-stage { gap: clamp(9px, 1.3vh, 15px); }
+.breakup-video-shell {
+  width: min(290px, 74vw);
+  height: min(34svh, 320px);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 380ms ease;
+  flex: 0 0 auto;
+}
+.breakup-video-shell.is-visible { opacity: 1; pointer-events: auto; }
+.breakup-conversation-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 432 / 850;
+  object-fit: contain;
+  background: #09080c;
+  border: 1px solid rgba(220,199,220,.28);
+  border-radius: 7px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.3);
+}
+.breakup-day-copy { width: min(960px, 100%); }
+@media (max-width: 650px) {
+  .new-memory-stage {
+    width: 100%;
+    padding: max(9px, env(safe-area-inset-top)) 12px max(14px, env(safe-area-inset-bottom));
+    gap: 10px;
+    justify-content: flex-start;
+  }
+  .new-memory-title { font-size: clamp(24px, 6.2vw, 33px); line-height: 1.08; }
+  .new-memory-date { margin-top: 6px; font-size: 9px; }
+  .new-memory-copy { gap: 8px; }
+  .new-memory-copy p { font-size: clamp(12px, 3.35vw, 14px); line-height: 1.37; }
+  .waiting-days-screenshot-frame { width: min(270px, 72vw); height: min(32svh, 270px); }
+  .breakup-video-shell { width: min(270px, 74vw); height: min(31svh, 245px); }
+}
+@media (max-height: 620px) and (max-width: 650px) {
+  .new-memory-stage { gap: 6px; padding-top: 5px; }
+  .new-memory-copy { gap: 5px; }
+  .new-memory-copy p { font-size: 11px; line-height: 1.27; }
+  .waiting-days-screenshot-frame { height: min(26svh, 150px); }
+  .breakup-video-shell { height: min(26svh, 145px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .new-memory-glyph.is-visible { animation-duration: .01ms !important; }
+  .breakup-video-shell { transition: none !important; }
+}
+
+
+/* Scenes 46–49: the aftermath, the June 1 revelation, and the timeline. */
+.scene-after-breakup-hope .new-memory-stage,
+.scene-another-chance .new-memory-stage,
+.scene-what-i-came-to-know .new-memory-stage {
+  max-width: 1000px;
+}
+.after-breakup-hope-copy,
+.another-chance-copy,
+.what-i-came-to-know-copy {
+  width: min(940px, 100%);
+  gap: clamp(12px, 1.6vh, 18px);
+}
+.after-breakup-hope-copy p,
+.another-chance-copy p,
+.what-i-came-to-know-copy p {
+  font-size: clamp(14px, 1.16vw, 16px);
+  line-height: 1.5;
+}
+
+/* Two vertical columns: four earlier events at left, three later events at right. */
+.things-stage {
+  width: min(1320px, 100%);
+  height: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: clamp(10px, 1.8vh, 20px) clamp(10px, 2vw, 22px) clamp(14px, 2.2vh, 24px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: clamp(9px, 1.2vh, 14px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.things-stage::-webkit-scrollbar { display: none; }
+.things-heading { width: 100%; flex: 0 0 auto; text-align: center; }
+.things-title {
+  margin: 0 auto;
+  color: #f1e9f2;
+  font: 400 clamp(27px, 3vw, 40px)/1.08 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.things-intro {
+  width: min(900px, 100%);
+  margin: 9px auto 0;
+  color: #d9cbdc;
+  font: 400 clamp(12px, 1vw, 14px)/1.38 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: center;
+  text-wrap: pretty;
+}
+.things-timeline-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  /* Stretch both columns to the same row height. */
+  align-items: stretch;
+  column-gap: clamp(12px, 2vw, 26px);
+  row-gap: 0;
+  margin-top: 2px;
+}
+.things-timeline-column {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(7px, 1vh, 11px);
+  padding-left: 18px;
+}
+/* Three later events distribute vertically to balance the four-event column. */
+.things-timeline-right { justify-content: space-between; }
+.things-timeline-column::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 9px;
+  bottom: 9px;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, rgba(190,159,204,.72) 0 3px, transparent 3px 8px);
+  opacity: .7;
+}
+.things-event {
+  position: relative;
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .72s ease, transform .72s cubic-bezier(.2,.7,.2,1);
+}
+.things-event.is-visible { opacity: 1; transform: translateY(0); }
+.things-event::before {
+  content: "";
+  position: absolute;
+  left: -17px;
+  top: 13px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c4a7d1;
+  box-shadow: 0 0 0 3px rgba(190,159,204,.12), 0 0 13px rgba(193,154,210,.36);
+  opacity: 0;
+  transform: scale(.65);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.things-event.is-visible::before { opacity: 1; transform: scale(1); }
+.things-event-card {
+  min-height: 0;
+  padding: clamp(8px, 1.05vh, 12px) clamp(9px, 1.1vw, 14px);
+  border: 1px solid rgba(205,178,215,.18);
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(46,34,54,.70), rgba(23,18,31,.72));
+  box-shadow: 0 8px 22px rgba(0,0,0,.10);
+  text-align: left;
+}
+.things-event-date {
+  margin: 0 0 3px;
+  color: #c8add4;
+  font: 600 9px/1.3 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.things-event-card h3 {
+  margin: 0 0 4px;
+  color: #f0e7f1;
+  font: 400 clamp(14px, 1.25vw, 17px)/1.12 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+}
+.things-event-card > p:last-child {
+  margin: 0;
+  color: #d7cadb;
+  font: 400 clamp(11px, .94vw, 13px)/1.34 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.things-narration {
+  width: min(1040px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 1px auto 0;
+  padding: 0 5px 8px;
+  color: #ded3e1;
+  text-align: center;
+}
+.things-narration p {
+  width: 100%;
+  margin: 0;
+  color: #ded3e1;
+  font: 400 clamp(12px, 1vw, 14px)/1.38 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-wrap: pretty;
+}
+.things-narration p:last-child { color: #f0e7f1; }
+
+@media (max-width: 760px) {
+  .things-stage {
+    padding: max(8px, env(safe-area-inset-top)) 10px max(12px, env(safe-area-inset-bottom));
+    gap: 8px;
+    justify-content: flex-start;
+  }
+  .things-title { font-size: clamp(24px, 6vw, 32px); }
+  .things-intro { margin-top: 7px; font-size: 12px; line-height: 1.32; }
+  .things-timeline-grid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .things-timeline-column { gap: 7px; padding-left: 17px; }
+  .things-timeline-right { justify-content: flex-start; }
+  .things-event-card { padding: 8px 10px; border-radius: 9px; }
+  .things-event-date { font-size: 8px; }
+  .things-event-card h3 { font-size: 14px; }
+  .things-event-card > p:last-child { font-size: 11.5px; line-height: 1.32; }
+  .things-narration { gap: 7px; margin-top: 3px; }
+  .things-narration p { font-size: 12px; line-height: 1.34; }
+}
+@media (max-height: 700px) and (min-width: 761px) {
+  .things-stage { gap: 6px; padding-top: 7px; padding-bottom: 10px; }
+  .things-intro { margin-top: 5px; }
+  .things-timeline-column { gap: 6px; }
+  .things-event-card { padding-top: 6px; padding-bottom: 6px; }
+  .things-narration { gap: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .things-event, .things-event::before { transition: none !important; transform: none !important; }
+}
+
+/* Scene 48: June 1 conversation shown as individual WhatsApp-style bubbles. */
+.scene-what-i-came-to-know .what-i-came-to-know-stage {
+  width: min(1040px, 100%);
+  justify-content: flex-start;
+  align-items: center;
+  gap: clamp(8px, 1.4vh, 15px);
+  padding: clamp(12px, 2.1vh, 22px) clamp(12px, 2vw, 22px) clamp(12px, 2vh, 20px);
+  overflow: hidden;
+}
+.scene-what-i-came-to-know .what-i-came-to-know-copy {
+  width: min(960px, 100%);
+  flex: 0 0 auto;
+  gap: 0;
+}
+.scene-what-i-came-to-know .what-i-came-to-know-copy p {
+  font-size: clamp(12px, 1.08vw, 15px);
+  line-height: 1.43;
+  text-align: center;
+}
+.what-chat-feed {
+  width: min(900px, 100%);
+  min-height: 0;
+  max-height: 60vh;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px clamp(3px, 1vw, 10px) 12px;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+.what-chat-feed::-webkit-scrollbar { display: none; }
+.what-chat-row {
+  display: none;
+  width: fit-content;
+  max-width: min(78%, 690px);
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  opacity: 0;
+  transform: translateY(7px);
+}
+.what-chat-row.is-visible {
+  display: flex;
+  animation: what-chat-message-in .34s cubic-bezier(.2,.7,.2,1) forwards;
+}
+.what-chat-row.incoming { align-self: flex-start; }
+.what-chat-row.outgoing {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+.what-chat-bubble {
+  max-width: 100%;
+  padding: 9px 13px 8px;
+  border: 1px solid rgba(218,205,220,.12);
+  border-radius: 14px 14px 14px 5px;
+  background: linear-gradient(145deg, rgba(48,41,57,.96), rgba(37,31,46,.96));
+  color: #f0eaf1;
+  font: 400 clamp(12px, .98vw, 14px)/1.42 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  box-shadow: 0 4px 13px rgba(0,0,0,.12);
+}
+.what-chat-row.outgoing .what-chat-bubble {
+  border-color: rgba(171,204,181,.16);
+  border-radius: 14px 14px 5px 14px;
+  background: linear-gradient(145deg, rgba(49,83,68,.97), rgba(39,68,57,.97));
+  color: #eef4ef;
+}
+.what-chat-time {
+  padding: 0 4px;
+  color: rgba(218,207,222,.66);
+  font: 500 9px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .015em;
+}
+.what-chat-row.outgoing .what-chat-time { text-align: right; }
+@keyframes what-chat-message-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 650px) {
+  .scene-what-i-came-to-know .what-i-came-to-know-stage {
+    padding: max(10px, env(safe-area-inset-top)) 10px max(12px, env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+  .scene-what-i-came-to-know .what-i-came-to-know-copy p {
+    font-size: clamp(11.5px, 3.25vw, 13px);
+    line-height: 1.35;
+  }
+  .what-chat-feed { max-height: 62vh; gap: 7px; padding: 3px 2px 10px; }
+  .what-chat-row { max-width: 89%; }
+  .what-chat-bubble { padding: 8px 11px 7px; font-size: clamp(11.5px, 3.15vw, 13px); line-height: 1.38; }
+  .what-chat-time { font-size: 8px; }
+}
+@media (max-height: 620px) and (min-width: 651px) {
+  .scene-what-i-came-to-know .what-i-came-to-know-stage { gap: 6px; padding-top: 7px; padding-bottom: 8px; }
+  .what-chat-feed { max-height: 58vh; gap: 5px; }
+  .what-chat-bubble { padding-top: 6px; padding-bottom: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .what-chat-feed { scroll-behavior: auto; }
+  .what-chat-row.is-visible { animation-duration: .01ms !important; }
+}
