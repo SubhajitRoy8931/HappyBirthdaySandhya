@@ -1651,6 +1651,38 @@
     if (videoVisible && activeScene === 45) attemptBreakupVideoPlay();
   }
 
+  // Scene 51: a single centred reflection with four photographs and one
+  // quiet link to the separate poem collection. All text uses the existing
+  // 70ms chapter typewriter; images reveal in one horizontal row.
+  const scene51Stage = document.getElementById('scene51Stage');
+  const scene51Heading = document.querySelector('.scene51-heading');
+  const scene51IntroParagraph = scene51Stage.querySelector('.scene51-opening p');
+  const scene51MiddleParagraphs = [...scene51Stage.querySelectorAll('.scene51-middle p')];
+  const scene51FinalParagraphs = [...scene51Stage.querySelectorAll('.scene51-final-copy p')];
+  const scene51Photos = [...scene51Stage.querySelectorAll('.scene51-photo')];
+  scene51Photos.forEach(photo => {
+    const image = photo.querySelector('img');
+    if (image) image.addEventListener('error', () => { image.hidden = true; });
+  });
+  const scene51PoemsLink = document.getElementById('scene51PoemsLink');
+  const SCENE51_TITLE_AT_MS = 250;
+  const SCENE51_INTRO_START_MS = 900;
+  const SCENE51_PHOTO_GAP_MS = 220;
+  // Keep a full two-second pause after the last photograph before the next
+  // narration block begins, then leave ten seconds after the closing words.
+  const SCENE51_PHOTO_SETTLE_MS = 2000;
+  const SCENE51_LINK_HOLD_MS = 550;
+  const SCENE51_FINAL_HOLD_MS = 10000;
+  const scene51IntroTypewriter = prepareChapterTextTypewriter([scene51IntroParagraph], 'new-memory-glyph');
+  const scene51PhotosStartMs = SCENE51_INTRO_START_MS + scene51IntroTypewriter.typingDuration + 450;
+  const scene51LastPhotoAtMs = scene51PhotosStartMs + Math.max(0, scene51Photos.length - 1) * SCENE51_PHOTO_GAP_MS;
+  const scene51MiddleStartMs = scene51LastPhotoAtMs + SCENE51_PHOTO_SETTLE_MS;
+  const scene51MiddleTypewriter = prepareChapterTextTypewriter(scene51MiddleParagraphs, 'new-memory-glyph');
+  const scene51LinkAtMs = scene51MiddleStartMs + scene51MiddleTypewriter.typingDuration;
+  const scene51FinalStartMs = scene51LinkAtMs + SCENE51_LINK_HOLD_MS;
+  const scene51FinalTypewriter = prepareChapterTextTypewriter(scene51FinalParagraphs, 'new-memory-glyph');
+  const scene51Duration = Math.ceil(scene51FinalStartMs + scene51FinalTypewriter.typingDuration + SCENE51_FINAL_HOLD_MS);
+
   const sceneDefs = [
     { name: 'opening', duration: poemDuration },
     { name: 'date', duration: 5500 },
@@ -1702,7 +1734,8 @@
     { name: 'another-chance', duration: anotherChanceDuration },
     { name: 'what-i-came-to-know', duration: whatICameToKnowDuration },
     { name: 'things-i-didnt-know', duration: thingsDuration },
-    { name: 'exam-results', duration: examResultsDuration }
+    { name: 'exam-results', duration: examResultsDuration },
+    { name: 'final-chapters', duration: scene51Duration }
   ];
   const offsets = sceneDefs.map((_, index) =>
     sceneDefs.slice(0, index).reduce((sum, scene) => sum + scene.duration, 0)
@@ -1759,7 +1792,8 @@
     { at: offsets[49], a: [20,16,31], b: [11,9,20], c: [4,4,9], glow: [111,96,145], alpha: .085, x: 50, y: 50, size: 43, wash: [124,87,131], washAlpha: .045, washX: 84, washY: 78 },
     { at: offsets[49] + sceneDefs[49].duration * .85, a: [12,11,21], b: [8,7,14], c: [3,3,7], glow: [87,79,117], alpha: .055, x: 50, y: 52, size: 40, wash: [91,69,111], washAlpha: .025, washX: 16, washY: 80 },
     { at: offsets[50], a: [17,14,27], b: [9,8,17], c: [3,3,7], glow: [101,89,132], alpha: .07, x: 51, y: 49, size: 42, wash: [112,81,125], washAlpha: .035, washX: 82, washY: 78 },
-    { at: offsets[50] + sceneDefs[50].duration * .88, a: [11,10,18], b: [7,6,12], c: [3,3,6], glow: [80,73,107], alpha: .045, x: 50, y: 52, size: 39, wash: [86,65,105], washAlpha: .02, washX: 17, washY: 80 }
+    { at: offsets[50] + sceneDefs[50].duration * .88, a: [11,10,18], b: [7,6,12], c: [3,3,6], glow: [80,73,107], alpha: .045, x: 50, y: 52, size: 39, wash: [86,65,105], washAlpha: .02, washX: 17, washY: 80 },
+    { at: offsets[51], a: [17,12,25], b: [9,7,16], c: [3,3,7], glow: [126,94,145], alpha: .085, x: 50, y: 46, size: 44, wash: [151,103,146], washAlpha: .045, washX: 80, washY: 77 }
   ];
 
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -1790,6 +1824,7 @@
     atmosphere.style.setProperty('--wash-y', `${mixNumber('washY').toFixed(2)}%`);
   }
 
+  const STORY_RETURN_STATE_KEY = 'birthday-story-return-state-v1';
   let elapsed = 0;
   let lastFrameTime = 0;
   let activeScene = -1;
@@ -1879,6 +1914,7 @@
       examResultsStage.scrollTop = 0;
       examResultCards.forEach(card => card.classList.remove('is-visible'));
     }
+    if (index === 51 && scene51Stage) scene51Stage.scrollTop = 0;
     scenes.forEach((scene, i) => scene.classList.toggle('is-active', i === index));
     previousButton.disabled = index === 0;
     nextButton.disabled = false;
@@ -2140,6 +2176,16 @@
         if (visible && !wasVisible) keepLatestExamResultVisible(event.element);
       });
     }
+    if (index === 51) {
+      scene51Heading.classList.toggle('is-visible', localTime >= SCENE51_TITLE_AT_MS);
+      updateNewMemoryTypewriter(scene51IntroTypewriter, localTime, SCENE51_INTRO_START_MS);
+      scene51Photos.forEach((photo, photoIndex) => {
+        photo.classList.toggle('is-visible', localTime >= scene51PhotosStartMs + photoIndex * SCENE51_PHOTO_GAP_MS);
+      });
+      updateNewMemoryTypewriter(scene51MiddleTypewriter, localTime, scene51MiddleStartMs);
+      scene51PoemsLink.classList.toggle('is-visible', localTime >= scene51LinkAtMs);
+      updateNewMemoryTypewriter(scene51FinalTypewriter, localTime, scene51FinalStartMs);
+    }
   }
 
   function render() {
@@ -2327,6 +2373,41 @@
   });
   playButton.addEventListener('click', togglePlay);
 
+  // Open the poem collection in this tab so sessionStorage can carry the
+  // precise story position across the page navigation. The elapsed timestamp
+  // is advanced to the instant of the click (rather than the previous frame).
+  scene51PoemsLink.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    const clickTime = !paused && !ended && lastFrameTime
+      ? performance.now() - lastFrameTime
+      : 0;
+    const savedElapsed = Math.max(0, Math.min(totalDuration - 1, elapsed + clickTime));
+    const returnState = {
+      version: 1,
+      elapsed: savedElapsed,
+      sceneIndex: sceneAt(savedElapsed),
+      paused: Boolean(paused || ended),
+      controlsVisible: Boolean(controlsVisible),
+      scene51ScrollTop: scene51Stage.scrollTop,
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+      savedAt: Date.now()
+    };
+    const serializedState = JSON.stringify(returnState);
+    try {
+      // sessionStorage is a convenient same-tab fallback on normal web hosts.
+      sessionStorage.setItem(STORY_RETURN_STATE_KEY, serializedState);
+    } catch (error) {
+      // The URL state below also supports local file:// previews where browser
+      // storage may be restricted.
+      console.info('Session storage unavailable; carrying the story position in the URL.', error);
+    }
+    const poemsUrl = new URL(scene51PoemsLink.href, window.location.href);
+    poemsUrl.searchParams.set('storyReturn', serializedState);
+    window.location.assign(poemsUrl.href);
+  });
+
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && !paused && !ended) {
       paused = true;
@@ -2355,7 +2436,68 @@
     if (event.code === 'Escape' && controlsVisible && paused) resumeAndHide();
   });
 
-  render();
+  function restoreStoryPositionAfterPoems() {
+    let savedState;
+    let serializedState = new URLSearchParams(window.location.search).get('storyReturn');
+    try {
+      if (!serializedState) serializedState = sessionStorage.getItem(STORY_RETURN_STATE_KEY);
+      sessionStorage.removeItem(STORY_RETURN_STATE_KEY);
+    } catch (error) {
+      // URL state remains available even where sessionStorage is restricted.
+      console.info('Session storage unavailable while restoring the story position.', error);
+    }
+    if (!serializedState) return false;
+    try {
+      savedState = JSON.parse(serializedState);
+    } catch (error) {
+      console.warn('Could not parse the saved story position:', error);
+      return false;
+    }
+
+    if (!savedState || savedState.version !== 1
+      || !Number.isFinite(savedState.elapsed)
+      || !Number.isFinite(savedState.savedAt)
+      || Date.now() - savedState.savedAt > 24 * 60 * 60 * 1000) {
+      return false;
+    }
+
+    const restoredElapsed = Math.max(0, Math.min(totalDuration - 1, savedState.elapsed));
+    if (Number.isInteger(savedState.sceneIndex)
+      && sceneAt(restoredElapsed) !== savedState.sceneIndex) {
+      return false;
+    }
+
+    // Remove the one-time URL payload after reading it so a later manual
+    // refresh does not repeatedly rewind the restored story position.
+    if (window.location.search.includes('storyReturn=')) {
+      try {
+        window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+      } catch (_) { /* Some file:// previews disallow history URL replacement. */ }
+    }
+
+    elapsed = restoredElapsed;
+    ended = false;
+    paused = Boolean(savedState.paused);
+    activeScene = -1;
+    lastFrameTime = 0;
+    render();
+
+    // Rendering re-enters the saved scene and reconstructs all image/text
+    // reveal states from elapsed time; restore its scroll position afterwards.
+    if (activeScene === 51 && Number.isFinite(savedState.scene51ScrollTop)) {
+      scene51Stage.scrollTop = Math.max(0, savedState.scene51ScrollTop);
+    }
+    if (Number.isFinite(savedState.scrollX) && Number.isFinite(savedState.scrollY)) {
+      window.scrollTo(savedState.scrollX, savedState.scrollY);
+    }
+    experience.classList.toggle('is-paused', paused);
+    if (savedState.controlsVisible) showControls();
+    else hideControls();
+    syncPlayButton();
+    return true;
+  }
+
+  if (!restoreStoryPositionAfterPoems()) render();
 
   // Respect live changes to the operating-system accessibility preference.
   // A legacy listener fallback covers older Safari versions.
