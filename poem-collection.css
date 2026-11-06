@@ -1,0 +1,52 @@
+/* Collection-page additions; shared colour and typography come from poem-page.css. */
+.collection-page { width: min(900px, calc(100% - 44px)); }
+.collection-header { margin-top: 46px; margin-bottom: 28px; }
+.collection-header h1 { font-size: clamp(42px, 7vw, 66px); }
+.collection-index {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 24px;
+  margin: 0 auto 48px; padding: 15px 0; border-top: 1px solid #ffffff18; border-bottom: 1px solid #ffffff18;
+}
+.collection-index a { color: #c5aecb; font-size: 12px; letter-spacing: .035em; text-decoration: none; transition: color 180ms ease; }
+.collection-index a:hover { color: #f1e8f1; }
+.collection-index a span { margin-left: 7px; color: #8f7b99; font-variant-numeric: tabular-nums; }
+.poem-collection-section { margin: 0 auto 58px; scroll-margin-top: 24px; }
+.collection-section-heading { margin: 0 0 20px; text-align: center; }
+.section-overline { color: #a98eae; font-size: 9px; font-weight: 650; letter-spacing: .25em; text-transform: uppercase; }
+.collection-section-heading h2 { margin: 12px 0 8px; color: #f1e8f1; font: 400 clamp(27px, 4vw, 36px)/1.15 "Iowan Old Style", "Palatino Linotype", Georgia, serif; letter-spacing: -.025em; }
+.section-note { margin: 0 auto; color: #a996b0; font: 400 14px/1.6 "Iowan Old Style", "Palatino Linotype", Georgia, serif; }
+.poem-entry-list { display: grid; gap: 10px; }
+.poem-entry { border: 1px solid rgba(211,190,220,.15); border-radius: 12px; background: linear-gradient(145deg, rgba(72,52,81,.22), rgba(24,18,34,.38)); overflow: hidden; }
+.poem-entry[open] { border-color: rgba(198,166,207,.33); background: linear-gradient(145deg, rgba(72,52,81,.3), rgba(24,18,34,.52)); }
+.poem-entry-summary { min-height: 68px; padding: 15px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none; }
+.poem-entry-summary::-webkit-details-marker { display: none; }
+.poem-entry-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.poem-entry-title { color: #eee4ef; font: 400 clamp(16px, 2.1vw, 19px)/1.3 "Iowan Old Style", "Palatino Linotype", Georgia, serif; }
+.poem-entry-occasion { color: #9f8da7; font: 500 10px/1.4 Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: .055em; }
+.poem-entry-affordance { flex: 0 0 auto; color: #bd9fc8; font: 500 10px/1.3 Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: .04em; }
+.poem-entry[open] .poem-entry-affordance { color: #d6c1dc; }
+.poem-entry-body { padding: 9px 18px 25px; border-top: 1px solid #ffffff13; }
+.collection-full-poem { width: min(690px, 100%); padding-top: 18px; font-size: clamp(15px, 1.8vw, 18px); line-height: 1.78; }
+.collection-full-poem .stanza { margin-bottom: 29px; }
+.collection-full-poem .stanza:last-child { margin-bottom: 0; }
+.dedicated-poem-link { display: table; margin: 25px auto 0; color: #c5aecb; font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
+.collection-footer { margin-top: 50px; }
+@media (max-width: 600px) {
+  .collection-page { width: min(100% - 30px, 520px); }
+  .collection-header { margin-top: 37px; margin-bottom: 23px; }
+  .collection-header h1 { font-size: clamp(36px, 10vw, 48px); }
+  .collection-index { gap: 12px 18px; margin-bottom: 39px; }
+  .collection-index a { font-size: 11px; }
+  .poem-collection-section { margin-bottom: 44px; }
+  .collection-section-heading h2 { font-size: 27px; }
+  .section-note { font-size: 13px; }
+  .poem-entry-summary { min-height: 64px; padding: 13px 13px; gap: 9px; }
+  .poem-entry-title { font-size: 16px; }
+  .poem-entry-occasion { font-size: 9px; }
+  .poem-entry-affordance { font-size: 9px; }
+  .poem-entry-body { padding: 8px 12px 21px; }
+  .collection-full-poem { font-size: 15px; line-height: 1.72; }
+  .collection-full-poem .stanza { margin-bottom: 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collection-index a { transition: none; }
+}
